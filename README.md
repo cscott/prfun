@@ -48,6 +48,11 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise.reduceRight`]
     - [`Promise#reduceRight`]
     - [`Promise#spread`]
+- [Utility](#utility)
+    - [`Promise#call`]
+    - [`Promise#get`]
+    - [`Promise#return`]
+    - [`Promise#throw`]
 
 ###Collections
 
@@ -377,6 +382,84 @@ Promise.all([task1, task2, task3]).then(function(results){
 
 This is useful when the `results` array contains items that are not
 conceptually items of the same list.
+
+<hr>
+
+###Utility
+
+Shorthands for common operations.
+
+#####`Promise#call(String propertyName [, Promise|dynamic arg...])` -> `Promise`
+[`Promise#call`]: #promisecallstring-propertyname--promisedynamic-arg---promise
+
+This is a convenience method for doing:
+
+```js
+promise.then(function(obj){
+    return obj[propertyName].call(obj, arg...);
+});
+```
+If any of the `arg...` are Promises, they will be resolved before the method
+is invoked.
+
+<hr>
+
+#####`Promise#get(String propertyName)` -> `Promise`
+[`Promise#get`]: #promisegetstring-propertyname---promise
+
+This is a convenience method for doing:
+
+```js
+promise.then(function(obj){
+    return obj[propertyName];
+});
+```
+
+<hr>
+
+#####`Promise#return(Promise|dynamic value)` -> `Promise`
+[`Promise#return`]: #promisereturnpromisedynamic-value---promise
+
+Convenience method for:
+
+```js
+promise.then(function() {
+   return value;
+});
+```
+
+in the case where `value` doesn't change its value.
+
+That means `value` is bound at the time of calling `Promise#return()`
+so this will not work as expected:
+
+```js
+function getData() {
+    var data;
+
+    return query().then(function(result) {
+        data = result;
+    }).return(data);
+}
+```
+
+because `data` is `undefined` at the time `.return` is called.
+
+<hr>
+
+#####`Promise#throw(Promise|dynamic reason)` -> `Promise`
+[`Promise#throw`]: #promisethrowpromisedynamic-reason---promise
+
+Convenience method for:
+
+```js
+promise.then(function() {
+   throw reason;
+});
+```
+Except that `reason` is first resolved, if it is a `Promise` or thenable.
+
+Same limitations apply as with [`Promise#return`].
 
 <hr>
 
