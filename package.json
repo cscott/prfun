@@ -1,0 +1,31 @@
+{
+  "name": "prfun",
+  "version": "0.0.0",
+  "description": "Helper functions for ES6 promises",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cscott/prfun"
+  },
+  "keywords": [
+    "promise",
+    "promises",
+    "es6",
+    "harmony"
+  ],
+  "author": "C. Scott Ananian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cscott/prfun/issues"
+  },
+  "homepage": "https://github.com/cscott/prfun",
+  "devDependencies": {
+    "mocha": "~1.17.1"
+  },
+  "dependencies": {
+    "es6-shim": "~0.9.3"
+  }
+}
