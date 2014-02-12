@@ -3,15 +3,6 @@
 var assert = require("assert");
 require('../')();
 
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
-
 function fail(done) {
   return function(e) { done(e); };
 }
@@ -114,6 +105,7 @@ describe("delay", function () {
   });
 
   it("should treat two arguments as a value + a time", function (done) {
+    var pending = true;
     var promise =
       Promise.delay("what", 40)['finally'](function() { pending = false; });
 

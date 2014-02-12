@@ -5,14 +5,7 @@ require('../')();
 
 var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
+var pending = Promise.defer.bind(Promise);
 
 function fail(done) {
   return function(e) { done(e); };
@@ -56,7 +49,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -76,7 +69,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("in an explicitly generic.caught filter that comes first", function(done) {
@@ -95,7 +88,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("in a specific handler after thrown in generic", function(done) {
@@ -116,7 +109,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -134,7 +127,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -154,7 +147,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 });
@@ -180,7 +173,7 @@ describe("A promise handler that throws a custom error", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify( "Is filtered along with built-in errors", function(done) {
@@ -198,7 +191,7 @@ describe("A promise handler that throws a custom error", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 });
 
@@ -219,7 +212,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -240,7 +233,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("in an explicitly generic.caught filter that comes first", function(done) {
@@ -260,7 +253,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("in a specific handler after thrown in generic", function(done) {
@@ -282,7 +275,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -300,7 +293,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 
@@ -320,7 +313,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
 });
@@ -346,9 +339,9 @@ describe("A promise handler that is caught in a filter", function() {
       assert.equal( v, 3 );
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
     setTimeout(function(){
-      c.fulfill(3);
+      c.resolve(3);
     }, 20 );
   });
 
@@ -370,9 +363,9 @@ describe("A promise handler that is caught in a filter", function() {
       assert.equal( v, 3 );
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
     setTimeout(function(){
-      c.fulfill(3);
+      c.resolve(3);
     }, 20 );
   });
 });
@@ -393,7 +386,7 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("will NOT catch a thrown thing not matching the filter", function(done) {
@@ -410,7 +403,7 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("will fail when a predicate is a bad error class", function(done) {
@@ -429,7 +422,7 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("will catch a thrown undefiend", function(done){
@@ -448,7 +441,7 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("will catch a thrown string", function(done){
@@ -467,7 +460,7 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
   });
 
   specify("will fail when a predicate throws", function(done) {
@@ -487,11 +480,9 @@ describe("A promise handler with a predicate filter", function() {
       assert(caught);
     }).then(done, fail(done));
 
-    a.fulfill(3);
+    a.resolve(3);
 
 
   });
 
-
 });
-

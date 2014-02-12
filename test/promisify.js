@@ -3,17 +3,6 @@
 var assert = require("assert");
 require('../')();
 
-var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
-
 function fail(done) {
   return function(e) { done(e); };
 }
@@ -265,7 +254,7 @@ describe.skip("Primitive errors wrapping", function() {
   });
 
   specify("when the node function errbacks it synchronously inside then", function(done){
-    Promise.fulfilled().then(function(){
+    Promise.resolve().then(function(){
       errbacksStrings().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);
@@ -283,7 +272,7 @@ describe.skip("Primitive errors wrapping", function() {
   });
 
   specify("when the node function errbacks it asynchronously inside then", function(done){
-    Promise.fulfilled().then(function(){
+    Promise.resolve().then(function(){
       errbacksStringsAsync().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);

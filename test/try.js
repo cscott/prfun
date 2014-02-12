@@ -5,14 +5,7 @@ require('../')();
 
 var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
+var pending = Promise.defer.bind(Promise);
 
 function fail(done) {
   return function(e) { done(e); };
@@ -90,7 +83,7 @@ describe("Promise.try", function(){
     }).then(done, fail(done));
 
     setTimeout(function(){
-      d.fulfill(3);
+      d.resolve(3);
     }, 13);
   });
   specify("should unwrap returned thenable", function(done){

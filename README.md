@@ -53,6 +53,7 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#get`]
     - [`Promise#return`]
     - [`Promise#throw`]
+    - [`Promise.defer`]
 - [Try/caught/finally](#trycaughtfinally)
     - [`Promise.try`]
     - [`Promise#caught`]
@@ -475,6 +476,27 @@ promise.then(function() {
 ...except that `reason` is first resolved, if it is a `Promise` or thenable.
 
 Same limitations apply as with [`Promise#return`].
+
+<hr>
+
+#####`Promise.defer()` -> `PromiseResolver`
+[`Promise.defer`]: #promisedefer---promiseresolver
+
+Create a promise with undecided fate and return a `PromiseResolver` to
+control it.
+
+The use of `Promise.defer` is discouraged---it is much more awkward
+and error-prone than using `new Promise`.  It is provided only for
+compatibility with older libraries like [q], [when], etc.
+
+A `PromiseResolver` contains three fields: `promise`, `resolve`, and
+`reject`.  It also contains two additional helpers, which are
+implemented as getters: `resolver` and `callback`.  The `resolver`
+property returns an object with only `resolve` and `reject` fields, as
+in the [when] package.  The `callback` property returns a node-style
+callback function with signature `(err, result)` which will invoke
+`reject` and `resolve` as appropriate.  This is like the `callback`
+property in [bluebird] or the result of `makeNodeResolver` in [q].
 
 <hr>
 

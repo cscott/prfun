@@ -5,14 +5,7 @@ require('../')();
 
 var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
+var pending = Promise.defer.bind(Promise);
 
 function fail(done) {
   return function(e) { done(e); };
@@ -66,15 +59,15 @@ describe("Promise.race", function(){
 
   it("fulfills when passed an immediately fulfilled value", function (done) {
     var d1 = pending();
-    d1.fulfill(1);
+    d1.resolve(1);
     var p1 = d1.promise;
 
     var d2 = pending();
-    d2.fulfill(2);
+    d2.resolve(2);
     var p2 = d2.promise;
 
     var d3 = pending();
-    d3.fulfill(3);
+    d3.resolve(3);
     var p3 = d3.promise;
 
     Promise.race([p1, p2, p3]).then(function(v){
@@ -84,15 +77,15 @@ describe("Promise.race", function(){
 
   it("fulfills when passed a promise of an immediately fulfilled value", function (done) {
     var d1 = pending();
-    d1.fulfill(1);
+    d1.resolve(1);
     var p1 = d1.promise;
 
     var d2 = pending();
-    d2.fulfill(2);
+    d2.resolve(2);
     var p2 = d2.promise;
 
     var d3 = pending();
-    d3.fulfill(3);
+    d3.resolve(3);
     var p3 = d3.promise;
 
     fulfilled([p1, p2, p3]).race().then(function(v){
@@ -115,9 +108,9 @@ describe("Promise.race", function(){
     }).then(done, fail(done));
 
     setTimeout(function(){
-      d1.fulfill(1);
-      d2.fulfill(2);
-      d3.fulfill(3);
+      d1.resolve(1);
+      d2.resolve(2);
+      d3.resolve(3);
     }, 13);
   });
 
@@ -136,9 +129,9 @@ describe("Promise.race", function(){
     }).then(done, fail(done));
 
     setTimeout(function(){
-      d1.fulfill(1);
-      d2.fulfill(2);
-      d3.fulfill(3);
+      d1.resolve(1);
+      d2.resolve(2);
+      d3.resolve(3);
     }, 13);
   });
 
@@ -160,11 +153,11 @@ describe("Promise.race", function(){
     var p1 = d1.promise;
 
     var d2 = pending();
-    d2.fulfill(2);
+    d2.resolve(2);
     var p2 = d2.promise;
 
     var d3 = pending();
-    d3.fulfill(3);
+    d3.resolve(3);
     var p3 = d3.promise;
 
     Promise.race([p1, p2, , ,  p3]).then(assert.fail, function(v){
@@ -178,11 +171,11 @@ describe("Promise.race", function(){
     var p1 = d1.promise;
 
     var d2 = pending();
-    d2.fulfill(2);
+    d2.resolve(2);
     var p2 = d2.promise;
 
     var d3 = pending();
-    d3.fulfill(3);
+    d3.resolve(3);
     var p3 = d3.promise;
 
     fulfilled([p1, p2, , ,  p3]).race().then(assert.fail, function(v){
@@ -206,8 +199,8 @@ describe("Promise.race", function(){
 
     setTimeout(function(){
       d1.reject(1);
-      d2.fulfill(2);
-      d3.fulfill(3);
+      d2.resolve(2);
+      d3.resolve(3);
     }, 13);
   });
 
@@ -227,8 +220,8 @@ describe("Promise.race", function(){
 
     setTimeout(function(){
       d1.reject(1);
-      d2.fulfill(2);
-      d3.fulfill(3);
+      d2.resolve(2);
+      d3.resolve(3);
     }, 13);
   });
 

@@ -1,17 +1,9 @@
 var assert = require("assert");
 require('../')();
 
-var adapter = Promise;
 var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
-var pending = function() {
-  var o = {};
-  o.promise = new Promise(function(fulfill, reject) {
-    o.fulfill = fulfill;
-    o.reject = reject;
-  });
-  return o;
-};
+var pending = Promise.defer.bind(Promise);
 
 function fail(done) {
   return function(e) { done(e); };
@@ -20,20 +12,20 @@ function fail(done) {
 describe("Promise.props", function () {
 
   specify("should reject undefined", function(done) {
-    adapter.props().caught(TypeError, function(){
+    Promise.props().caught(TypeError, function(){
       done();
     });
   });
 
   specify("should reject primitive", function(done) {
-    adapter.props("str").caught(TypeError, function(){
+    Promise.props("str").caught(TypeError, function(){
       done();
     });
   });
 
   specify("should resolve to new object", function(done) {
     var o = {};
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert( v !== o );
       assert.deepEqual(o, v);
     }).then(done, fail(done));
@@ -45,7 +37,7 @@ describe("Promise.props", function () {
       two: 2,
       three: 3
     };
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -60,7 +52,7 @@ describe("Promise.props", function () {
       two: fulfilled(2),
       three: fulfilled(3)
     };
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -78,7 +70,7 @@ describe("Promise.props", function () {
       two: d2.promise,
       three: d3.promise
     };
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -87,9 +79,9 @@ describe("Promise.props", function () {
     }).then(done, fail(done));
 
     setTimeout(function(){
-      d1.fulfill(1);
-      d2.fulfill(2);
-      d3.fulfill(3);
+      d1.resolve(1);
+      d2.resolve(2);
+      d3.resolve(3);
     }, 13);
   });
 
@@ -99,7 +91,7 @@ describe("Promise.props", function () {
       two: rejected(2),
       three: fulfilled(3)
     };
-    adapter.props(o).then(assert.fail, function(v){
+    Promise.props(o).then(assert.fail, function(v){
       assert( v === 2 );
     }).then(done, fail(done));
   });
@@ -111,7 +103,7 @@ describe("Promise.props", function () {
       three: fulfilled(3)
     };
     var d1 = pending();
-    adapter.props(d1.promise).then(function(v){
+    Promise.props(d1.promise).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -119,17 +111,17 @@ describe("Promise.props", function () {
       }, v);
     }).then(done, fail(done));
     setTimeout(function(){
-      d1.fulfill(o);
+      d1.resolve(o);
     }, 13);
   });
 
   specify("should reject a promise for a primitive", function(done) {
     var d1 = pending();
-    adapter.props(d1.promise).caught(TypeError, function(){
+    Promise.props(d1.promise).caught(TypeError, function(){
       done();
     });
     setTimeout(function(){
-      d1.fulfill("text");
+      d1.resolve("text");
     }, 13);
   });
 
@@ -142,7 +134,7 @@ describe("Promise.props", function () {
       two: t2,
       three: t3
     };
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -173,7 +165,7 @@ describe("Promise.props", function () {
         });
       }
     };
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         one: 1,
         two: 2,
@@ -201,7 +193,7 @@ describe("Promise.props", function () {
     deferred1.resolve();
     });
 
-    adapter.props({
+    Promise.props({
     one: deferred1.promise,
     two: deferred2.promise
     }).then(function () {
@@ -222,7 +214,7 @@ describe("Promise.props", function () {
   specify("treats arrays for their properties", function(done) {
     var o = [1,2,3];
 
-    adapter.props(o).then(function(v){
+    Promise.props(o).then(function(v){
       assert.deepEqual({
         0: 1,
         1: 2,
