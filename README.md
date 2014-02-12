@@ -58,6 +58,7 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#caught`]
     - [`Promise#finally`]
 - [Method wrappers and helpers](#method-wrappers-and-helpers)
+    - [`Promise.guard`]
     - [`Promise.method`]
     - [`Promise#nodify`]
     - [`Promise.promisify`]
@@ -676,6 +677,70 @@ chainers. This is more in line with the synchronous `finally` keyword.
 ### Method wrappers and helpers
 
 Functions for writing promise-returning methods.
+
+#####`Promise.guard(Function|Number condition, Function fn)` -> `Function`
+[`Promise.guard`]: #promiseguardfunctionnumber-condition-function-fn---function
+
+Limit the concurrency of a function `fn`.  Creates a new function whose
+concurrency is limited by `condition`.  This can be useful with
+operations such as [when.map](#whenmap),
+[when/parallel](#whenparallel), etc. that allow tasks to execute in
+"parallel", to limit the number which can be in-flight simultanously.
+
+The `condition` argument is a concurrency limiting condition, such as
+[`Promise.guard.n`].  If `condition` is a number, it will be treated
+as if it were `Promise.guard.n(condition)`.
+
+Example:
+```js
+// Using Promise.guard with Promise.map to limit concurrency
+// of the mapFunc
+
+var guardedAsyncOperation, mapped;
+
+// Allow only 1 inflight execution of guarded
+guardedAsyncOperation = Promise.guard(1, asyncOperation);
+
+mapped = Promise.map(array, guardedAsyncOperation);
+mapped.then(function(results) {
+    // Handle results as usual
+});
+```
+
+Example:
+```js
+// Using Promise.guard with Promise.all to limit concurrency
+// across *all tasks*
+
+var guardTask, tasks, taskResults;
+
+tasks = [/* Array of async functions to execute as tasks */];
+
+// Use bind() to create a guard that can be applied to any function
+// Only 2 tasks may execute simultaneously.
+// Note that all guarded tasks share the same condition instance
+// (`Promise.guard.n(2)`) -- if we had passed `2` instead they
+// would each have their own guard, which wouldn't do what we want.
+guardTask = Promise.guard.bind(Promise, Promise.guard.n(2));
+
+// Use guardTask to guard all the tasks.
+tasks = tasks.map(guardTask);
+
+// Execute the tasks with concurrency/"parallelism" limited to 2
+taskResults = Promise.all(tasks);
+taskResults.then(function(results) {
+    // Handle results as usual
+});
+```
+
+######`Promise.guard.n(Number number)` -> `Function`
+[`Promise.guard.n`]: #promiseguardnnumber-number---function
+
+Creates a condition that allows at most `number` of simultaneous executions inflight.
+
+```js
+var condition = Promise.guard.n(number);
+```
 
 #####`Promise.method(Function fn)` -> `Function`
 [`Promise.method`]: #promisemethodfunction-fn---function
