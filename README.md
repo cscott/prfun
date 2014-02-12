@@ -53,6 +53,10 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#get`]
     - [`Promise#return`]
     - [`Promise#throw`]
+- [Try/caught/finally](#trycaughtfinally)
+    - [`Promise.try`]
+    - [`Promise#caught`]
+    - [`Promise#finally`]
 
 ###Collections
 
@@ -430,7 +434,7 @@ promise.then(function() {
 
 in the case where `value` doesn't change its value.
 
-That means `value` is bound at the time of calling `Promise#return()`
+That means `value` is bound at the time of calling `Promise#return`
 so this will not work as expected:
 
 ```js
@@ -457,9 +461,207 @@ promise.then(function() {
    throw reason;
 });
 ```
-Except that `reason` is first resolved, if it is a `Promise` or thenable.
+...except that `reason` is first resolved, if it is a `Promise` or thenable.
 
 Same limitations apply as with [`Promise#return`].
+
+<hr>
+
+### Try/caught/finally
+
+#####`Promise.try(Function fn [, dynamic ctx [, dynamic args...]] )` -> `Promise`
+[`Promise.try`]: #promisetryfunction-fn--dynamic-ctx--dynamic-args----promise
+
+Start the chain of promises with `Promise.try`. Any synchronous
+exceptions will be turned into rejections on the returned promise.
+
+```js
+function getUserById(id) {
+    return Promise.try(function(){
+        if (typeof id !== "number") {
+            throw new Error("id must be a number");
+        }
+        return db.getUserById(id);
+    });
+}
+```
+
+Now if someone uses this function, they will catch all errors in their
+Promise `.catch` handlers instead of having to handle both synchronous
+and asynchronous exception flows.
+
+If provided, `ctx` becomes the `this` value for the function call.  Any `args`
+provided are resolved (if they are promises) and passed as arguments to the
+function call.
+
+<hr>
+
+#####`Promise#caught([Function ErrorClass|Function predicate...], Function handler)` -> `Promise`
+[`Promise#caught`]: #promisecaughtfunction-errorclassfunction-predicate-function-handler---promise
+
+This extends `.catch` to work more like catch-clauses in languages
+like Java or C#. Instead of manually checking `instanceof` or
+`.name === "SomeError"`, you may specify a number of error constructors which
+are eligible for this catch handler. The catch handler that is first
+met that has eligible constructors specified, is the one that will be
+called.
+
+Example:
+
+```js
+somePromise.then(function(){
+    return a.b.c.d();
+}).caught(TypeError, function(e){
+    //If a is defined, will end up here because
+    //it is a type error to reference property of undefined
+}).caught(ReferenceError, function(e){
+    //Will end up here if a wasn't defined at all
+}).caught(function(e){
+    //Generic catch-the rest, error wasn't TypeError nor
+    //ReferenceError
+});
+ ```
+
+You may also add multiple filters for a catch handler:
+
+```js
+somePromise.then(function(){
+    return a.b.c.d();
+}).caught(TypeError, ReferenceError, function(e){
+    //Will end up here on programmer error
+}).caught(NetworkError, TimeoutError, function(e){
+    //Will end up here on expected everyday network errors
+}).catch(function(e){
+    //Catch any unexpected errors
+});
+```
+
+For a parameter to be considered a type of error that you want to
+filter, you need the constructor to have its `.prototype` property be
+`instanceof Error`.
+
+Such a constructor can be minimally created like so:
+
+```js
+function MyCustomError() {}
+MyCustomError.prototype = Object.create(Error.prototype);
+```
+
+Using it:
+
+```js
+Promise.resolve().then(function(){
+    throw new MyCustomError();
+}).caught(MyCustomError, function(e){
+    //will end up here now
+});
+```
+
+However, you can obtain better stack traces and string output with:
+
+```js
+function MyCustomError(message) {
+    this.message = message;
+    this.name = "MyCustomError";
+    if (Error.captureStackTrace) // v8 environments
+        Error.captureStackTrace(this, MyCustomError);
+}
+MyCustomError.prototype = Object.create(Error.prototype);
+MyCustomError.prototype.constructor = MyCustomError;
+```
+
+Using CoffeeScript's `class` for the same:
+
+```coffee
+class MyCustomError extends Error
+  constructor: (@message) ->
+    @name = "MyCustomError"
+    Error.captureStackTrace?(this, MyCustomError)
+```
+
+This method also supports predicate-based filters. If you pass a
+predicate function instead of an error constructor, the predicate will
+receive the error as an argument. The return result of the predicate
+will be used determine whether the error handler should be called.
+
+Predicates should allow for very fine grained control over caught
+errors: pattern matching, error-type sets with set operations and many
+other techniques can be implemented on top of them.
+
+Example of using a predicate-based filter:
+
+```js
+var request = Promise.promisify(require("request"));
+
+function clientError(e) {
+    return e.code >= 400 && e.code < 500;
+}
+
+request("http://www.google.com").then(function(contents){
+    console.log(contents);
+}).caught(clientError, function(e){
+   //A client error like 400 Bad Request happened
+});
+```
+
+<hr>
+
+#####`Promise#finally(Function handler)` -> `Promise`
+[`Promise#finally`]: #promisefinallyfunction-handler---promise
+
+Pass a handler that will be called regardless of this promise's
+fate. Returns a new promise chained from this promise, which will
+become resolved with the same fulfillment value or rejection reason as
+this promise. However, if `handler` returns a promise, the resolution
+of the returned promise will be delayed until the promise returned
+from `handler` is finished.  If `handler` throws an exception or
+returns a rejected promise, the returned promise will reject in the
+same way.  (This matches the JavaScript semantics for exceptions
+thrown inside `finally` clauses.)
+
+Consider the example:
+
+```js
+function anyway() {
+    $("#ajax-loader-animation").hide();
+}
+
+function ajaxGetAsync(url) {
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest;
+        xhr.addEventListener("error", reject);
+        xhr.addEventListener("load", resolve);
+        xhr.open("GET", url);
+        xhr.send(null);
+    }).then(anyway, anyway);
+}
+```
+
+This example doesn't work as intended because the `then` handler
+actually swallows the exception and returns `undefined` for any
+further chainers.
+
+The situation can be fixed with `Promise#finally`:
+
+```js
+function ajaxGetAsync(url) {
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest;
+        xhr.addEventListener("error", reject);
+        xhr.addEventListener("load", resolve);
+        xhr.open("GET", url);
+        xhr.send(null);
+    }).finally(function(){
+        $("#ajax-loader-animation").hide();
+    });
+}
+```
+
+Now the animation is hidden but an exception or the actual return
+value will automatically skip the finally and propagate to further
+chainers. This is more in line with the synchronous `finally` keyword.
+
+`Promise#finally` works like [Q's finally method](https://github.com/kriskowal/q/wiki/API-Reference#wiki-promisefinallycallback).
 
 <hr>
 

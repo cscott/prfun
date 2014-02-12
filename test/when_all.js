@@ -28,12 +28,6 @@
 var assert = require("assert");
 require('../')();
 
-Promise.prototype.caught = function(ty, handle) {
-  return this.then(undefined, function(r) {
-    if (r instanceof ty) { return handle(r); }
-    throw r;
-  });
-};
 var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
