@@ -70,14 +70,14 @@ var Promise = prfun( require('bluebird'/*etc*/) );
 - [Generators](#generators)
     - [`Promise.fromGenerator`]
 
-###Collections
+### Collections
 
 Methods of `Promise` instances and core static methods of the Promise
 class to deal with collections of promises or mixed promises and
 values.
 
-#####`Promise.all(Array<dynamic>|Iterable values)` -> `Promise`
-[`Promise.all`]: #promiseallarraydynamiciterable-values---promise
+#### `Promise.all(Array<dynamic>|Iterable values)` → `Promise`
+[`Promise.all`]: #promiseallarraydynamiciterable-values--promise
 
 This is an
 [ES6 built-in](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise.all).
@@ -95,8 +95,8 @@ returned promise is rejected with the rejection reason.
 
 <hr>
 
-#####`Promise#all()` -> `Promise`
-[`Promise#all`]: #promiseall---promise
+#### `Promise#all()` → `Promise`
+[`Promise#all`]: #promiseall--promise
 
 Convenience method for:
 ```js
@@ -108,8 +108,8 @@ promise.then(function(value) {
 See [`Promise.all`].
 <hr>
 
-#####`Promise.join([dynamic value...])` -> `Promise`
-[`Promise.join`]: #promisejoindynamic-value---promise
+#### `Promise.join([dynamic value...])` → `Promise`
+[`Promise.join`]: #promisejoindynamic-value--promise
 
 Like [`Promise.all`] but instead of having to pass an array, the array
 is generated from the passed variadic arguments.
@@ -132,8 +132,8 @@ Promise.join(a, b).spread(function(aResult, bResult) {
 
 <hr>
 
-#####`Promise.map(Array<dynamic>|Promise values, Function mapper [, Object thisArg])` -> `Promise`
-[`Promise.map`]: #promisemaparraydynamicpromise-values-function-mapper--object-thisarg---promise
+#### `Promise.map(Array<dynamic>|Promise values, Function mapper [, Object thisArg])` → `Promise`
+[`Promise.map`]: #promisemaparraydynamicpromise-values-function-mapper--object-thisarg--promise
 
 Maps an array-like, or a promise of an array-like, using the provided
 `mapper` function.
@@ -146,8 +146,8 @@ Promise.cast(values).map(mapper, thisArg);
 See [`Promise#map`].
 <hr>
 
-#####`Promise#map(Function mapper [, Object thisArg])` -> `Promise`
-[`Promise#map`]: #promisemapfunction-mapper--object-thisarg---promise
+#### `Promise#map(Function mapper [, Object thisArg])` → `Promise`
+[`Promise#map`]: #promisemapfunction-mapper--object-thisarg--promise
 
 Map (a promise of) an array which contains a promises (or
 a mix of promises and values) with the given `mapper` function with
@@ -176,8 +176,8 @@ would throw a `TypeError`.
 
 <hr>
 
-#####`Promise.props(Object|Promise object)` -> `Promise`
-[`Promise.props`]: #promisepropsobjectpromise-object---promise
+#### `Promise.props(Object|Promise object)` → `Promise`
+[`Promise.props`]: #promisepropsobjectpromise-object--promise
 
 Like [`Promise.all`] but for object properties instead of array
 items. Returns a promise that is fulfilled when all the properties of
@@ -219,8 +219,8 @@ Promise.all([getPictures(), getComments(), getTweets()])
 
 <hr>
 
-#####`Promise#props()` -> `Promise`
-[`Promise#props`]: #promiseprops---promise
+#### `Promise#props()` → `Promise`
+[`Promise#props`]: #promiseprops--promise
 
 Convenience method for:
 ```js
@@ -232,8 +232,8 @@ promise.then(function(value) {
 See [`Promise.props`].
 <hr>
 
-#####`Promise.race(Array<dynamic>|Iterable values)` -> `Promise`
-[`Promise.race`]: #promiseracearraydynamiciterable-values---promise
+#### `Promise.race(Array<dynamic>|Iterable values)` → `Promise`
+[`Promise.race`]: #promiseracearraydynamiciterable-values--promise
 
 This is an
 [ES6 built-in](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise.race).
@@ -250,8 +250,8 @@ respective rejection reason or fulfillment value.
 
 <hr>
 
-#####`Promise#race()` -> `Promise`
-[`Promise#race`]: #promiserace---promise
+#### `Promise#race()` → `Promise`
+[`Promise#race`]: #promiserace--promise
 
 Convenience method for:
 ```js
@@ -263,8 +263,8 @@ promise.then(function(value) {
 See [`Promise.race`].
 <hr>
 
-#####`Promise.reduce(Array<dynamic>|Promise values, Function reducer [, dynamic initialValue])` -> `Promise`
-[`Promise.reduce`]: #promisereducearraydynamicpromise-values-function-reducer--dynamic-initialvalue---promise
+#### `Promise.reduce(Array<dynamic>|Promise values, Function reducer [, dynamic initialValue])` → `Promise`
+[`Promise.reduce`]: #promisereducearraydynamicpromise-values-function-reducer--dynamic-initialvalue--promise
 
 Reduce an array-like, or a promise of an array-like, left-to-right
 using the provided `reducer` function.
@@ -277,8 +277,8 @@ Promise.cast(values).reduce(reducer /*, initialValue*/);
 See [`Promise#reduce`].
 <hr>
 
-#####`Promise#reduce(Function reducer [, dynamic initialValue])` -> `Promise`
-[`Promise#reduce`]: #promisereducefunction-reducer--dynamic-initialvalue---promise
+#### `Promise#reduce(Function reducer [, dynamic initialValue])` → `Promise`
+[`Promise#reduce`]: #promisereducefunction-reducer--dynamic-initialvalue--promise
 
 Reduce an array, or a promise of an array, which contains a promises
 (or a mix of promises and values) left-to-right with the given
@@ -325,8 +325,8 @@ an `initialValue`.
 
 <hr>
 
-#####`Promise.reduceRight(Array<dynamic>|Promise values, Function reducer [, dynamic initialValue])` -> `Promise`
-[`Promise.reduceRight`]: #promisereducerightarraydynamicpromise-values-function-reducer--dynamic-initialvalue---promise
+#### `Promise.reduceRight(Array<dynamic>|Promise values, Function reducer [, dynamic initialValue])` → `Promise`
+[`Promise.reduceRight`]: #promisereducerightarraydynamicpromise-values-function-reducer--dynamic-initialvalue--promise
 
 Reduce an array-like, or a promise of an array-like, right-to-left
 using the provided `reducer` function.
@@ -339,8 +339,8 @@ Promise.cast(values).reduceRight(reducer /*, initialValue*/);
 See [`Promise#reduceRight`].
 <hr>
 
-#####`Promise#reduceRight(Function reducer [, dynamic initialValue])` -> `Promise`
-[`Promise#reduceRight`]: #promisereducerightfunction-reducer--dynamic-initialvalue---promise
+#### `Promise#reduceRight(Function reducer [, dynamic initialValue])` → `Promise`
+[`Promise#reduceRight`]: #promisereducerightfunction-reducer--dynamic-initialvalue--promise
 
 Reduce an array, or a promise of an array, which contains a promises
 (or a mix of promises and values) right-to-left with the given
@@ -373,8 +373,8 @@ an `initialValue`.
 
 <hr>
 
-#####`Promise#spread([Function fulfilledHandler] [, Function rejectedHandler ])` -> `Promise`
-[`Promise#spread`]: #promisespreadfunction-fulfilledhandler--function-rejectedhandler----promise
+#### `Promise#spread([Function fulfilledHandler] [, Function rejectedHandler ])` → `Promise`
+[`Promise#spread`]: #promisespreadfunction-fulfilledhandler--function-rejectedhandler---promise
 
 Like calling `Promise#then`, but the fulfillment value or rejection reason is
 assumed to be an array, which is flattened to the formal parameters of
@@ -401,12 +401,12 @@ conceptually items of the same list.
 
 <hr>
 
-###Utility
+### Utility
 
 Shorthands for common operations.
 
-#####`Promise#call(String propertyName [, Promise|dynamic arg...])` -> `Promise`
-[`Promise#call`]: #promisecallstring-propertyname--promisedynamic-arg---promise
+#### `Promise#call(String propertyName [, Promise|dynamic arg...])` → `Promise`
+[`Promise#call`]: #promisecallstring-propertyname--promisedynamic-arg--promise
 
 This is a convenience method for doing:
 
@@ -420,8 +420,8 @@ is invoked.
 
 <hr>
 
-#####`Promise#get(String propertyName)` -> `Promise`
-[`Promise#get`]: #promisegetstring-propertyname---promise
+#### `Promise#get(String propertyName)` → `Promise`
+[`Promise#get`]: #promisegetstring-propertyname--promise
 
 This is a convenience method for doing:
 
@@ -433,8 +433,8 @@ promise.then(function(obj){
 
 <hr>
 
-#####`Promise#return(Promise|dynamic value)` -> `Promise`
-[`Promise#return`]: #promisereturnpromisedynamic-value---promise
+#### `Promise#return(Promise|dynamic value)` → `Promise`
+[`Promise#return`]: #promisereturnpromisedynamic-value--promise
 
 Convenience method for:
 
@@ -463,8 +463,8 @@ because `data` is `undefined` at the time `.return` is called.
 
 <hr>
 
-#####`Promise#throw(Promise|dynamic reason)` -> `Promise`
-[`Promise#throw`]: #promisethrowpromisedynamic-reason---promise
+#### `Promise#throw(Promise|dynamic reason)` → `Promise`
+[`Promise#throw`]: #promisethrowpromisedynamic-reason--promise
 
 Convenience method for:
 
@@ -479,8 +479,8 @@ Same limitations apply as with [`Promise#return`].
 
 <hr>
 
-#####`Promise.defer()` -> `PromiseResolver`
-[`Promise.defer`]: #promisedefer---promiseresolver
+#### `Promise.defer()` → `PromiseResolver`
+[`Promise.defer`]: #promisedefer--promiseresolver
 
 Create a promise with undecided fate and return a `PromiseResolver` to
 control it.
@@ -502,8 +502,8 @@ property in [bluebird] or the result of `makeNodeResolver` in [q].
 
 ### Try/caught/finally
 
-#####`Promise.try(Function fn [, dynamic ctx [, dynamic args...]] )` -> `Promise`
-[`Promise.try`]: #promisetryfunction-fn--dynamic-ctx--dynamic-args----promise
+#### `Promise.try(Function fn [, dynamic ctx [, dynamic args...]] )` → `Promise`
+[`Promise.try`]: #promisetryfunction-fn--dynamic-ctx--dynamic-args---promise
 
 Start the chain of promises with `Promise.try`. Any synchronous
 exceptions will be turned into rejections on the returned promise.
@@ -529,8 +529,8 @@ function call.
 
 <hr>
 
-#####`Promise#caught([Function ErrorClass|Function predicate...], Function handler)` -> `Promise`
-[`Promise#caught`]: #promisecaughtfunction-errorclassfunction-predicate-function-handler---promise
+#### `Promise#caught([Function ErrorClass|Function predicate...], Function handler)` → `Promise`
+[`Promise#caught`]: #promisecaughtfunction-errorclassfunction-predicate-function-handler--promise
 
 This extends `.catch` to work more like catch-clauses in languages
 like Java or C#. Instead of manually checking `instanceof` or
@@ -639,8 +639,8 @@ request("http://www.google.com").then(function(contents){
 
 <hr>
 
-#####`Promise#finally(Function handler)` -> `Promise`
-[`Promise#finally`]: #promisefinallyfunction-handler---promise
+#### `Promise#finally(Function handler)` → `Promise`
+[`Promise#finally`]: #promisefinallyfunction-handler--promise
 
 Pass a handler that will be called regardless of this promise's
 fate. Returns a new promise chained from this promise, which will
@@ -702,14 +702,14 @@ chainers. This is more in line with the synchronous `finally` keyword.
 
 Functions for writing promise-returning methods.
 
-#####`Promise.guard(Function|Number condition, Function fn)` -> `Function`
-[`Promise.guard`]: #promiseguardfunctionnumber-condition-function-fn---function
+#### `Promise.guard(Function|Number condition, Function fn)` → `Function`
+[`Promise.guard`]: #promiseguardfunctionnumber-condition-function-fn--function
 
-Limit the concurrency of a function `fn`.  Creates a new function whose
-concurrency is limited by `condition`.  This can be useful with
-operations such as [when.map](#whenmap),
-[when/parallel](#whenparallel), etc. that allow tasks to execute in
-"parallel", to limit the number which can be in-flight simultanously.
+Limit the concurrency of a function `fn`.  Creates a new function
+whose concurrency is limited by `condition`.  This can be useful with
+operations such as [`Promise.map`], [`Promise.all`], etc that allow
+tasks to execute in "parallel", to limit the number which can be
+in-flight simultanously.
 
 The `condition` argument is a concurrency limiting condition, such as
 [`Promise.guard.n`].  If `condition` is a number, it will be treated
@@ -757,8 +757,8 @@ taskResults.then(function(results) {
 });
 ```
 
-######`Promise.guard.n(Number number)` -> `Function`
-[`Promise.guard.n`]: #promiseguardnnumber-number---function
+##### `Promise.guard.n(Number number)` → `Function`
+[`Promise.guard.n`]: #promiseguardnnumber-number--function
 
 Creates a condition that allows at most `number` of simultaneous executions inflight.
 
@@ -766,8 +766,8 @@ Creates a condition that allows at most `number` of simultaneous executions infl
 var condition = Promise.guard.n(number);
 ```
 
-#####`Promise.method(Function fn)` -> `Function`
-[`Promise.method`]: #promisemethodfunction-fn---function
+#### `Promise.method(Function fn)` → `Function`
+[`Promise.method`]: #promisemethodfunction-fn--function
 
 Returns a new function that wraps the given function `fn`. The new
 function will always return a promise that is fulfilled with the
@@ -818,8 +818,8 @@ MyClass.prototype.method = Promise.method(function(input) {
 
 <hr>
 
-#####`Promise#nodify([Function callback])` -> `Promise`
-[`Promise#nodify`]: #promisenodifyfunction-callback---promise
+#### `Promise#nodify([Function callback])` → `Promise`
+[`Promise#nodify`]: #promisenodifyfunction-callback--promise
 
 Register a node-style callback on this promise. When this promise is
 is either fulfilled or rejected, the node callback will be called back
@@ -863,8 +863,8 @@ getDataFor("me", function(err, dataForMe) {
 
 <hr>
 
-#####`Promise.promisify(Function nodeFunction [, dynamic receiver])` -> `Function`
-[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-receiver---function
+#### `Promise.promisify(Function nodeFunction [, dynamic receiver])` → `Function`
+[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-receiver--function
 
 Returns a function that will wrap the given `nodeFunction`. Instead of
 taking a callback, the returned function will return a promise whose
@@ -920,8 +920,8 @@ library which has a callback signature of multiple success values.
 
 Methods to delay and time out promises.
 
-#####`Promise.delay([dynamic value,] int ms)` -> `Promise`
-[`Promise.delay`]: #promisedelaydynamic-value-int-ms---promise
+#### `Promise.delay([dynamic value,] int ms)` → `Promise`
+[`Promise.delay`]: #promisedelaydynamic-value-int-ms--promise
 
 Returns a promise that will be fulfilled with `value` (or `undefined`)
 after given `ms` milliseconds. If `value` is a promise, the delay will
@@ -940,8 +940,8 @@ Promise.delay(500).then(function(){
 
 <hr>
 
-#####`Promise#delay(int ms)` -> `Promise`
-[`Promise#delay`]: #promisedelayint-ms---promise
+#### `Promise#delay(int ms)` → `Promise`
+[`Promise#delay`]: #promisedelayint-ms--promise
 
 Convenience method for:
 ```js
@@ -952,8 +952,8 @@ See [`Promise.delay`].
 
 <hr>
 
-#####`Promise#timeout(int ms [, String message])` -> `Promise`
-[`Promise#timeout`]: #promisetimeoutint-ms--string-message---promise
+#### `Promise#timeout(int ms [, String message])` → `Promise`
+[`Promise#timeout`]: #promisetimeoutint-ms--string-message--promise
 
 Returns a promise that will be fulfilled with this promise's
 fulfillment value or rejection reason. However, if this promise is not
@@ -988,7 +988,7 @@ function fetchContent(retries) {
 
 <hr>
 
-###Generators
+### Generators
 
 Using ECMAScript6 generators feature to implement better syntax for promises.
 
@@ -996,8 +996,8 @@ Using ECMAScript6 generators feature to implement better syntax for promises.
 and the `yield` keyword.  Node >= `0.11.2` with the `--harmony-generators`
 command-line flag will work.
 
-#####`Promise.fromGenerator(GeneratorFunction generatorFunction)` -> `Function`
-[`Promise.fromGenerator`]: #promisefromgeneratorgeneratorfunction-generatorfunction---function
+#### `Promise.fromGenerator(GeneratorFunction generatorFunction)` → `Function`
+[`Promise.fromGenerator`]: #promisefromgeneratorgeneratorfunction-generatorfunction--function
 
 Returns a function that can use `yield` to await the resolution of
 promises while control is transferred back to the JS event loop.  You
