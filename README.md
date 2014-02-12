@@ -61,6 +61,10 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise.method`]
     - [`Promise#nodify`]
     - [`Promise.promisify`]
+- [Timers](#timers)
+    - [`Promise.delay`]
+    - [`Promise#delay`]
+    - [`Promise#timeout`]
 
 ###Collections
 
@@ -822,6 +826,79 @@ The above uses the [request](https://github.com/mikeal/request)
 library which has a callback signature of multiple success values.
 
 <hr>
+
+### Timers
+
+Methods to delay and time out promises.
+
+#####`Promise.delay([dynamic value,] int ms)` -> `Promise`
+[`Promise.delay`]: #promisedelaydynamic-value-int-ms---promise
+
+Returns a promise that will be fulfilled with `value` (or `undefined`)
+after given `ms` milliseconds. If `value` is a promise, the delay will
+start counting down when it is fulfilled and the returned promise will
+be fulfilled with the fulfillment value of the `value` promise.
+
+```js
+Promise.delay(500).then(function(){
+    console.log("500 ms passed");
+    return "Hello world";
+}).delay(500).then(function(helloWorldString) {
+    console.log(helloWorldString);
+    console.log("another 500 ms passed") ;
+});
+```
+
+<hr>
+
+#####`Promise#delay(int ms)` -> `Promise`
+[`Promise#delay`]: #promisedelayint-ms---promise
+
+Convenience method for:
+```js
+Promise.delay(this, ms);
+```
+
+See [`Promise.delay`].
+
+<hr>
+
+#####`Promise#timeout(int ms [, String message])` -> `Promise`
+[`Promise#timeout`]: #promisetimeoutint-ms--string-message---promise
+
+Returns a promise that will be fulfilled with this promise's
+fulfillment value or rejection reason. However, if this promise is not
+fulfilled or rejected within `ms` milliseconds, the returned promise
+is rejected with a `Promise.TimeoutError` instance.
+
+You may specify a custom error message with the `message` parameter.
+
+The example function `fetchContent` tries to fetch the contents of a
+web page with a 50ms timeout and sleeping 100ms between each retry. If
+there is no response after 5 retries, then the returned promise is
+rejected with a `ServerError` (made up error type).
+
+```js
+function fetchContent(retries) {
+    if (!retries) retries = 0;
+    var jqXHR = $.get("http://www.slowpage.com");
+    //Cast the jQuery promise into a bluebird promise
+    return Promise.cast(jqXHR)
+        .timeout(50)
+        .caught(Promise.TimeoutError, function() {
+            if (retries < 5) {
+                return Promise.delay(100).then(function(){
+                    return fetchContent(retries+1);
+                });
+            } else {
+                throw new ServerError("not responding after 5 retries");
+            }
+        });
+}
+```
+
+<hr>
+
 
 ## License
 
