@@ -57,6 +57,10 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise.try`]
     - [`Promise#caught`]
     - [`Promise#finally`]
+- [Method wrappers and helpers](#method-wrappers-and-helpers)
+    - [`Promise.method`]
+    - [`Promise#nodify`]
+    - [`Promise.promisify`]
 
 ###Collections
 
@@ -662,6 +666,160 @@ value will automatically skip the finally and propagate to further
 chainers. This is more in line with the synchronous `finally` keyword.
 
 `Promise#finally` works like [Q's finally method](https://github.com/kriskowal/q/wiki/API-Reference#wiki-promisefinallycallback).
+
+<hr>
+
+### Method wrappers and helpers
+
+Functions for writing promise-returning methods.
+
+#####`Promise.method(Function fn)` -> `Function`
+[`Promise.method`]: #promisemethodfunction-fn---function
+
+Returns a new function that wraps the given function `fn`. The new
+function will always return a promise that is fulfilled with the
+original function's return value or rejected with thrown exceptions
+from the original function.
+
+This method is convenient when a function can sometimes return
+synchronously or throw synchronously.
+
+Example without using `Promise.method`:
+
+```js
+MyClass.prototype.method = function(input) {
+    if (!this.isValid(input)) {
+        return Promise.reject(new TypeError("input is not valid"));
+    }
+
+    if (this.cache(input)) {
+        return Promise.resolve(this.someCachedValue);
+    }
+
+    return db.queryAsync(input).bind(this).then(function(value) {
+        this.someCachedValue = value;
+        return value;
+    });
+};
+```
+
+Using `Promise.method`, there is no need to manually wrap direct
+return or throw values into a promise:
+
+```js
+MyClass.prototype.method = Promise.method(function(input) {
+    if (!this.isValid(input)) {
+        throw new TypeError("input is not valid");
+    }
+
+    if (this.cachedFor(input)) {
+        return this.someCachedValue;
+    }
+
+    return db.queryAsync(input).bind(this).then(function(value) {
+        this.someCachedValue = value;
+        return value;
+    });
+});
+```
+
+<hr>
+
+#####`Promise#nodify([Function callback])` -> `Promise`
+[`Promise#nodify`]: #promisenodifyfunction-callback---promise
+
+Register a node-style callback on this promise. When this promise is
+is either fulfilled or rejected, the node callback will be called back
+with the node.js convention, where error reason is the first argument
+and success value is the sec ond argument. The error argument will be
+`null` in case of success.
+
+Returns back this promise instead of creating a new one. If the
+`callback` argument is not a function, this method does not do
+anything.
+
+This can be used to create APIs that both accept node-style callbacks
+and return promises:
+
+```js
+function getDataFor(input, callback) {
+    return dataFromDataBase(input).nodify(callback);
+}
+```
+
+The above function can then make everyone happy.
+
+Promises:
+
+```js
+getDataFor("me").then(function(dataForMe) {
+    console.log(dataForMe);
+});
+```
+
+Normal callbacks:
+
+```js
+getDataFor("me", function(err, dataForMe) {
+    if( err ) {
+        console.error( err );
+    }
+    console.log(dataForMe);
+});
+```
+
+<hr>
+
+#####`Promise.promisify(Function nodeFunction [, dynamic receiver])` -> `Function`
+[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-receiver---function
+
+Returns a function that will wrap the given `nodeFunction`. Instead of
+taking a callback, the returned function will return a promise whose
+fate is decided by the callback behavior of the given node
+function. The node function should conform to node.js convention of
+accepting a callback as last argument and calling that callback with
+error as the first argument and success value on the second argument.
+
+If the `nodeFunction` calls its callback with multiple success values,
+the fulfillment value will be an array of them.
+
+If you pass a `receiver`, the `nodeFunction` will be called as a
+method on the `receiver` (that is, `this` will be set to `receiver` when
+`nodeFunction` is invoked).
+
+Example of promisifying the asynchronous `readFile` of node.js `fs`-module:
+
+```js
+var fs = require('fs');
+var readFile = Promise.promisify(fs.readFile, fs);
+
+readFile("myfile.js", "utf8").then(function(contents){
+    return eval(contents);
+}).then(function(result){
+    console.log("The result of evaluating myfile.js", result);
+}).caught(SyntaxError, function(e){
+    console.log("File had syntax error", e);
+//Catch any other error
+}).catch(function(e){
+    console.log("Error reading file", e);
+});
+```
+
+**Tip**
+
+Use [`Promise#spread`] with APIs that have multiple success values:
+
+```js
+var request = Promise.promisify(require('request'));
+request("http://www.google.com").spread(function(request, body) {
+    console.log(body);
+}).catch(function(err) {
+    console.error(err);
+});
+```
+
+The above uses the [request](https://github.com/mikeal/request)
+library which has a callback signature of multiple success values.
 
 <hr>
 
