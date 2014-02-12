@@ -4,7 +4,7 @@
   "description": "Helper functions for ES6 promises",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --harmony-generators"
   },
   "repository": {
     "type": "git",
