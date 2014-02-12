@@ -4,7 +4,7 @@
   "description": "Helper functions for ES6 promises",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha --harmony-generators"
+    "test": "jshint . && mocha --harmony-generators"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/cscott/prfun",
   "devDependencies": {
-    "mocha": "~1.17.1"
+    "mocha": "~1.17.1",
+    "jshint": "~2.4.3"
   },
   "dependencies": {
     "es6-shim": "cscott/es6-shim#8369adb94c14854f96971d22fdde9779f088d79e"

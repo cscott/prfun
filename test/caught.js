@@ -16,7 +16,7 @@ CustomError.prototype = new Error();
 
 var predicateFilter = function(e) {
   return (/invalid/).test(e.message);
-}
+};
 
 function BadError(msg) {
   this.message = msg;
@@ -38,7 +38,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(SyntaxError, function(e){
       assert.fail();
     }).caught(TypeError, function(e){
@@ -58,7 +58,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(function(e){
       caught = true;
     }).caught(SyntaxError, function(e){
@@ -77,7 +77,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(Error, function(e){
       caught = true;
     }).caught(SyntaxError, function(e){
@@ -96,7 +96,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(function(e){
       throw e;
     }).caught(SyntaxError, function(e){
@@ -118,7 +118,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(SyntaxError, TypeError, function(e){
       caught = true;
     }).caught(function(e){
@@ -136,7 +136,7 @@ describe("A promise handler that throws a TypeError must be caught", function() 
     var caught = false;
 
     a.promise.then(function(){
-      a.b.c.d()
+      a.b.c.d();
     }).caught(SyntaxError, CustomError, function(e){
       assert.fail();
     }).caught(TypeError, function(e){
@@ -284,7 +284,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
     var caught = false;
 
     a.promise.then(function(){
-      throw new CustomError()
+      throw new CustomError();
     }).caught(SyntaxError, CustomError, function(e){
       caught = true;
     }).caught(function(e){
@@ -302,7 +302,7 @@ describe("A promise handler that throws a CustomError must be caught", function(
     var caught = false;
 
     a.promise.then(function(){
-      throw new CustomError()
+      throw new CustomError();
     }).caught(SyntaxError, TypeError, function(e){
       assert.fail();
     }).caught(CustomError, function(e){
@@ -431,7 +431,7 @@ describe("A promise handler with a predicate filter", function() {
 
     a.promise.then(function(){
       throw void 0;
-    }).caught(function(e) { return false }, function(e){
+    }).caught(function(e) { return false; }, function(e) {
       assert.fail();
     }).caught(predicatesUndefined, function(e){
       caught = true;
@@ -450,7 +450,7 @@ describe("A promise handler with a predicate filter", function() {
 
     a.promise.then(function(){
       throw "asd";
-    }).caught(function(e) { return false }, function(e){
+    }).caught(function(e) { return false; }, function(e) {
       assert.fail();
     }).caught(predicatesPrimitiveString, function(e){
       caught = true;

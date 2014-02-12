@@ -1,4 +1,6 @@
 "use strict";
+/* jshint evil:true */
+
 // bail if we're not running in node >= 0.11
 var node11 = parseInt(process.versions.node.split(".")[1], 10) >= 11;
 if (!node11) { return; }
@@ -13,15 +15,15 @@ function fail(done) {
 function get(arg) {
   return {
     then: function(ful, rej) {
-      ful(arg)
+      ful(arg);
     }
-  }
+  };
 }
 
 function fail(arg) {
   return {
     then: function(ful, rej) {
-      rej(arg)
+      rej(arg);
     }
   };
 }
@@ -150,7 +152,7 @@ describe("Promise.fromGenerator", function() {
       var b = new MyClass();
 
       Promise.join(a.spawnGoblins().then(function(){
-        return a.spawnGoblins()
+        return a.spawnGoblins();
       }), b.spawnGoblins()).then(function(){
         assert.equal(a.goblins, 5);
         assert.equal(b.goblins, 4);

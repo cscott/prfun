@@ -178,22 +178,22 @@ describe("when calling promisified function it should ", function(){
 
     a.then(function( val ){
       assert.equal(val, sentinel);
-      donecall()
+      donecall();
     });
 
     b.then(function( val ){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
-      donecall()
+      donecall();
     });
 
     c.then(function( val ){
       assert.equal(val, sentinel);
-      donecall()
+      donecall();
     });
 
     d.then(function( val ){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
-      donecall()
+      donecall();
     });
   });
 
@@ -207,10 +207,10 @@ describe("with more than 5 arguments", function(){
     value: 15,
 
     f: function(a,b,c,d,e,f,g, cb) {
-      cb(null, [a,b,c,d,e,f,g, this.value])
+      cb(null, [a,b,c,d,e,f,g, this.value]);
     }
 
-  }
+  };
 
   var prom = Promise.promisify(o.f, o);
 
@@ -240,7 +240,6 @@ describe.skip("Primitive errors wrapping", function() {
       return throwsStrings().then(assert.fail, function(e) {
         assert(e instanceof Error);
         assert(e.message === tprimitive);
-        assertLongStackTraces(e);
       }).then(done, fail(done));
     });
   });
@@ -258,7 +257,6 @@ describe.skip("Primitive errors wrapping", function() {
       errbacksStrings().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);
-        assertLongStackTraces(e);
       }).then(done, fail(done));
     });
   });
@@ -267,7 +265,6 @@ describe.skip("Primitive errors wrapping", function() {
     errbacksStringsAsync().then(assert.fail, function(e){
       assert(e instanceof Error);
       assert(e.message == tprimitive);
-      assertLongStackTraces(e);
     }).then(done, fail(done));
   });
 
@@ -276,7 +273,6 @@ describe.skip("Primitive errors wrapping", function() {
       errbacksStringsAsync().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);
-        assertLongStackTraces(e);
       }).then(done, fail(done));
     });
   });
@@ -286,9 +282,8 @@ describe.skip("Primitive errors wrapping", function() {
 // Also, we don't support Promise#error()
 describe.skip("RejectionError wrapping", function() {
 
-  var CustomError = function(){
+  var CustomError = function(){ };
 
-  }
   CustomError.prototype = new Error();
   CustomError.prototype.constructor = CustomError;
 
@@ -306,29 +301,29 @@ describe.skip("RejectionError wrapping", function() {
     console.log("customerror must be typed");
   }
 
-  function stringback(cb) {
+  var stringback = function(cb) {
     cb("Primitive as error");
-  }
+  };
 
-  function errback(cb) {
+  var errback = function(cb) {
     cb(new Error("error as error"));
-  }
+  };
 
-  function typeback(cb) {
+  var typeback = function(cb) {
     cb(new CustomError());
-  }
+  };
 
-  function stringthrow(cb) {
+  var stringthrow = function(cb) {
     throw("Primitive as error");
-  }
+  };
 
-  function errthrow(cb) {
+  var errthrow = function(cb) {
     throw(new Error("error as error"));
-  }
+  };
 
-  function typethrow(cb) {
+  var typethrow = function(cb) {
     throw(new CustomError());
-  }
+  };
 
   stringback = Promise.promisify(stringback);
   errback = Promise.promisify(errback);

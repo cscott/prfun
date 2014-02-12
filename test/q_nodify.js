@@ -82,7 +82,9 @@ if( isNodeJS ) {
 
     function clearHandlers() {
       var originalException;
-      while( originalException = process.listeners('uncaughtException').pop() ) {
+      while (true) {
+        originalException = process.listeners('uncaughtException').pop();
+        if (!originalException) break;
         process.removeListener('uncaughtException', originalException);
         h.push(originalException);
       }
@@ -90,7 +92,9 @@ if( isNodeJS ) {
 
     function clearHandlersNoRestore() {
       var originalException;
-      while( originalException = process.listeners('uncaughtException').pop() ) {
+      while(true) {
+        originalException = process.listeners('uncaughtException').pop();
+        if (!originalException) break;
         process.removeListener('uncaughtException', originalException);
       }
     }

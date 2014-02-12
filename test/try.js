@@ -93,7 +93,7 @@ describe("Promise.try", function(){
         then: function(f, v) {
           f(3);
         }
-      }
+      };
     }).then(function(v){
       assert(v === 3);
     }).then(done, fail(done));

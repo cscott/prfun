@@ -76,7 +76,7 @@ describe("delay", function () {
     var promise = Promise.delay(30)['finally'](function() { pending = false; });
 
     setTimeout(function () {
-      assert(pending)
+      assert(pending);
       setTimeout(function(){
         assert(!pending);
         done();

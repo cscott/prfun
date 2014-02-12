@@ -133,7 +133,7 @@ describe("Promise.defer", function () {
 
     // Both the returned promise, and the deferred's own promise should
     // be rejected with the same value
-    d.resolve(when.reject(sentinel))
+    d.resolve(when.reject(sentinel));
     d.promise.then(
       assert.fail,
       function(returnedPromiseVal) {

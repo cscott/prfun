@@ -1,0 +1,4 @@
+{
+        "predef": [ "Promise", "describe", "specify", "it" ],
+        "node": true
+}

@@ -18,7 +18,7 @@ describe("Promise.method", function(){
 
   var thrower = Promise.method(function() {
     throw error;
-  });;
+  });
 
   var identity = Promise.method(function(val) {
     return val;
@@ -99,7 +99,7 @@ describe("Promise.method", function(){
         then: function(f, v) {
           f(3);
         }
-      }
+      };
     })().then(function(v){
       assert.deepEqual(v, 3);
     }).then(done, fail(done));
