@@ -26,6 +26,6 @@
     "mocha": "~1.17.1"
   },
   "dependencies": {
-    "es6-shim": "~0.9.3"
+    "es6-shim": "cscott/es6-shim#8369adb94c14854f96971d22fdde9779f088d79e"
   }
 }
