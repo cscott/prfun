@@ -152,7 +152,7 @@ describe("when.all-test", function () {
     ).then(done, fail(done));
   });
 
-  specify("should reject when input promise does not resolve to array", function(done) {
+  specify.skip("should reject when input promise does not resolve to array", function(done) {
     when.all(resolved(1)).caught(TypeError, function(e){
       done();
     });
