@@ -140,7 +140,7 @@ Maps an array-like, or a promise of an array-like, using the provided
 
 Convenience method for:
 ```js
-Promise.cast(values).map(mapper, thisArg);
+Promise.resolve(values).map(mapper, thisArg);
 ```
 
 See [`Promise#map`].
@@ -271,7 +271,7 @@ using the provided `reducer` function.
 
 Convenience method for:
 ```js
-Promise.cast(values).reduce(reducer /*, initialValue*/);
+Promise.resolve(values).reduce(reducer /*, initialValue*/);
 ```
 
 See [`Promise#reduce`].
@@ -333,7 +333,7 @@ using the provided `reducer` function.
 
 Convenience method for:
 ```js
-Promise.cast(values).reduceRight(reducer /*, initialValue*/);
+Promise.resolve(values).reduceRight(reducer /*, initialValue*/);
 ```
 
 See [`Promise#reduceRight`].
@@ -972,7 +972,7 @@ function fetchContent(retries) {
     if (!retries) retries = 0;
     var jqXHR = $.get("http://www.slowpage.com");
     //Cast the jQuery promise into a bluebird promise
-    return Promise.cast(jqXHR)
+    return Promise.resolve(jqXHR)
         .timeout(50)
         .caught(Promise.TimeoutError, function() {
             if (retries < 5) {

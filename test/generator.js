@@ -127,7 +127,7 @@ describe("Promise.fromGenerator", function() {
         'var a = [1,2,3,4,5];'+
 
         'return yield Promise.map(a, function(v){'+
-        '  return Promise.cast(get(v*2));'+
+        '  return Promise.resolve(get(v*2));'+
         '});'+
       '})'))().then(function(arr){
         assert.deepEqual([2,4,6,8,10], arr);

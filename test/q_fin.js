@@ -36,7 +36,7 @@ describe("Promise#finally", function () {
 
   describe("when nothing is passed", function() {
     it("should do nothing", function(done) {
-      Promise.cast("foo")
+      Promise.resolve("foo")
         ['finally']()
         ['finally']()
         ['finally']()
@@ -52,7 +52,7 @@ describe("Promise#finally", function () {
     it("should call the callback", function (done) {
       var called = false;
 
-      Promise.cast("foo")
+      Promise.resolve("foo")
         ['finally'](function () {
           called = true;
         })
@@ -62,7 +62,7 @@ describe("Promise#finally", function () {
     });
 
     it("should fulfill with the original value", function (done) {
-      Promise.cast("foo")
+      Promise.resolve("foo")
         ['finally'](function () {
           return "bar";
         })
@@ -80,7 +80,7 @@ describe("Promise#finally", function () {
             pending = false;
           });
 
-          Promise.cast("foo")
+          Promise.resolve("foo")
             ['finally'](function () {
               return promise;
             })
@@ -93,7 +93,7 @@ describe("Promise#finally", function () {
 
       describe("that is rejected", function () {
         it("should reject with this new rejection reason", function (done) {
-          Promise.cast("foo")
+          Promise.resolve("foo")
             ['finally'](function () {
               return Promise.reject(exception1);
             })
@@ -109,7 +109,7 @@ describe("Promise#finally", function () {
 
     describe("when the callback throws an exception", function () {
       it("should reject with this new exception", function (done) {
-        Promise.cast("foo")
+        Promise.resolve("foo")
           ['finally'](function () {
             throw exception1;
           })
