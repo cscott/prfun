@@ -21,7 +21,7 @@ describe('Promise#call', function() {
     Promise.resolve({
       test: function(x, y) { return Promise.resolve(x + 2*y + this.foo); },
       foo: 42
-    }).call('test', 3, Promise.resolve(7)).then(function(v) {
+    }).call('test', 3, /*Promise.resolve*/(7)).then(function(v) {
       assert.deepEqual(v, 3 + 2*7 + 42);
     }).then(done, fail(done));
   });
