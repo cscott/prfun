@@ -14,15 +14,15 @@ function fail(done) {
 describe("Promise.props", function () {
 
   specify("should reject undefined", function(done) {
-    Promise.props().caught(TypeError, function(){
-      done();
-    });
+    Promise.props().then(assert.fail, function(e) {
+      assert(e instanceof TypeError);
+    }).then(done, fail(done));
   });
 
   specify("should reject primitive", function(done) {
-    Promise.props("str").caught(TypeError, function(){
-      done();
-    });
+    Promise.props("str").then(assert.fail, function(e) {
+      assert(e instanceof TypeError);
+    }).then(done, fail(done));
   });
 
   specify("should resolve to new object", function(done) {
@@ -119,9 +119,9 @@ describe("Promise.props", function () {
 
   specify("should reject a promise for a primitive", function(done) {
     var d1 = pending();
-    Promise.props(d1.promise).caught(TypeError, function(){
-      done();
-    });
+    Promise.props(d1.promise).then(assert.fail, function(e) {
+      assert(e instanceof TypeError);
+    }).then(done, fail(done));
     setTimeout(function(){
       d1.resolve("text");
     }, 13);

@@ -104,4 +104,17 @@ describe("Promise.method", function(){
       assert.deepEqual(v, 3);
     }).then(done, fail(done));
   });
+
+  specify("should unwrap this and arguments", function(done){
+    var THIS = {};
+    var pThis = pending();
+    var f = Promise.method(function(v) {
+      assert(this === THIS);
+      assert(v === 42);
+    });
+    f.call(pThis.promise, fulfilled(42)).then(done, fail(done));
+    setTimeout(function(){
+      pThis.resolve(THIS);
+    }, 10);
+  });
 });

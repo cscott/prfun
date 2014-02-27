@@ -668,8 +668,9 @@ Now if someone uses this function, they will catch all errors in their
 Promise `.catch` handlers instead of having to handle both synchronous
 and asynchronous exception flows.
 
-If provided, `ctx` becomes the `this` value for the function call.  Any `args`
-provided are resolved (if they are promises) and passed as arguments to the
+If provided, `ctx` becomes the `this` value for the function call.  If
+it is a promise, it is first resolved.  Any `args` provided are
+resolved (if they are promises) and passed as arguments to the
 function call.
 
 <hr>
@@ -917,7 +918,9 @@ var condition = Promise.guard.n(number);
 Returns a new function that wraps the given function `fn`. The new
 function will always return a promise that is fulfilled with the
 original function's return value or rejected with thrown exceptions
-from the original function.
+from the original function.  It will also unwrap any arguments
+(including `this`) which are promises, converting them to their
+fulfilled values.
 
 This method is convenient when a function can sometimes return
 synchronously or throw synchronously.
@@ -960,6 +963,8 @@ MyClass.prototype.method = Promise.method(function(input) {
     });
 });
 ```
+
+See also [`Q.promised`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qpromisedfunc).
 
 <hr>
 

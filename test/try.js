@@ -73,6 +73,20 @@ describe("Promise.try", function(){
     async = true;
   });
 
+  specify("should unwrap this and arguments", function(done){
+    var d = pending();
+    var THIS = {};
+    tryy(function(v) {
+      assert(this === THIS);
+      assert(v === 42);
+    }, d.promise, fulfilled(42)
+    ).then(done, fail(done));
+
+    setTimeout(function(){
+      d.resolve(THIS);
+    }, 10);
+  });
+
   specify("should unwrap returned promise", function(done){
     var d = pending();
 
