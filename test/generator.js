@@ -36,11 +36,11 @@ function delay() {
 
 var error = new Error("asd");
 
-describe("Promise.fromGenerator", function() {
+describe("Promise.async", function() {
   describe("thenables", function() {
     specify("when they fulfill, the yielded value should be that fulfilled value", function(done){
 
-      Promise.fromGenerator(eval('(function*(){'+
+      Promise.async(eval('(function*(){'+
 
         'var a = yield get(3);'+
         'assert.equal(a, 3);'+
@@ -55,7 +55,7 @@ describe("Promise.fromGenerator", function() {
 
     specify("when they reject, and the generator doesn't have try.caught, it should immediately reject the promise", function(done){
 
-      Promise.fromGenerator(eval('(function*(){'+
+      Promise.async(eval('(function*(){'+
         'var a = yield fail(error);'+
         'assert.fail();'+
 
@@ -67,7 +67,7 @@ describe("Promise.fromGenerator", function() {
 
     specify("when they reject, and the generator has try.caught, it should continue working normally", function(done){
 
-      Promise.fromGenerator(eval('(function*(){'+
+      Promise.async(eval('(function*(){'+
         'try {'+
         '  var a = yield fail(error);'+
         '} catch(e) {'+
@@ -82,7 +82,7 @@ describe("Promise.fromGenerator", function() {
 
     specify("when they fulfill but then throw, it should become rejection", function(done){
 
-      Promise.fromGenerator(eval('(function*(){'+
+      Promise.async(eval('(function*(){'+
         'var a = yield get(3);'+
         'assert.equal(a, 3);'+
         'throw error;'+
@@ -95,7 +95,7 @@ describe("Promise.fromGenerator", function() {
   describe("yield loop", function(){
 
     specify("should work", function(done){
-      Promise.fromGenerator(eval('(function*() {'+
+      Promise.async(eval('(function*() {'+
         'var a = [1,2,3,4,5];'+
 
         'for( var i = 0, len = a.length; i < len; ++i ) {'+
@@ -109,11 +109,11 @@ describe("Promise.fromGenerator", function() {
     });
 
     specify("inside yield should work", function(done){
-      Promise.fromGenerator(eval('(function*() {'+
+      Promise.async(eval('(function*() {'+
         'var a = [1,2,3,4,5];'+
 
         'return yield Promise.all(a.map(function(v){'+
-        '  return Promise.fromGenerator(function *() {'+
+        '  return Promise.async(function *() {'+
         '    return yield get(v*2);'+
         '  })();'+
         '}));'+
@@ -123,7 +123,7 @@ describe("Promise.fromGenerator", function() {
     });
 
     specify("with simple map should work", function(done){
-      Promise.fromGenerator(eval('(function*() {'+
+      Promise.async(eval('(function*() {'+
         'var a = [1,2,3,4,5];'+
 
         'return yield Promise.map(a, function(v){'+
@@ -136,13 +136,13 @@ describe("Promise.fromGenerator", function() {
 
   });
 
-  describe("when using fromGenerator as a method", function(){
+  describe("when using async as a method", function(){
 
     function MyClass() {
       this.goblins = 3;
     }
 
-    MyClass.prototype.spawnGoblins = Promise.fromGenerator(eval('(function*(){'+
+    MyClass.prototype.spawnGoblins = Promise.async(eval('(function*(){'+
     '  this.goblins = yield get(this.goblins+1);'+
     '})'));
 

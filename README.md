@@ -70,7 +70,7 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#delay`]
     - [`Promise#timeout`]
 - [Generators](#generators)
-    - [`Promise.fromGenerator`]
+    - [`Promise.async`]
 
 ### Collections
 
@@ -1141,17 +1141,18 @@ Using ECMAScript6 generators feature to implement better syntax for promises.
 and the `yield` keyword.  Node >= `0.11.2` with the `--harmony-generators`
 command-line flag will work.
 
-#### `Promise.fromGenerator(GeneratorFunction generatorFunction)` → `Function`
-[`Promise.fromGenerator`]: #promisefromgeneratorgeneratorfunction-generatorfunction--function
+#### `Promise.async(GeneratorFunction generatorFunction)` → `Function`
+[`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--function
 
-Returns a function that can use `yield` to await the resolution of
+Takes a function that can use `yield` to await the resolution of
 promises while control is transferred back to the JS event loop.  You
 can write code that looks and acts like synchronous code, even using
-synchronous `try`, `catch` and `finally`.
+synchronous `try`, `catch` and `finally`.  Returns a function which
+returns a `Promise`.
 
 ```js
-// Use Promise.fromGenerator to create a function that acts as a coroutine
-var getRecentTodosForUser = Promise.fromGenerator(function*(todosFilter, userId) {
+// Use Promise.async to create a function that acts as a coroutine
+var getRecentTodosForUser = Promise.async(function*(todosFilter, userId) {
     var todos;
     try {
         todos = yield getTodosForUser(userId);
@@ -1175,8 +1176,8 @@ expected.  In this revised example, `yield` allows us to return a
 result and move error handling out to the caller.
 
 ```js
-// Use Promise.fromGenerator to create a function that acts as a coroutine
-var getRecentTodosForUser = Promise.fromGenerator(function*(todosFilter, userId) {
+// Use Promise.async to create a function that acts as a coroutine
+var getRecentTodosForUser = Promise.async(function*(todosFilter, userId) {
     var todos = yield getTodosForUser(userId);
     return todos.filter(todosFilter);
 });
@@ -1197,13 +1198,13 @@ You can also use this function to implement coroutines:
 ```js
 function PingPong() { }
 
-PingPong.prototype.ping = Promise.fromGenerator(function* (val) {
+PingPong.prototype.ping = Promise.async(function* (val) {
     console.log("Ping?", val)
     yield Promise.delay(500)
     this.pong(val+1)
 });
 
-PingPong.prototype.pong = Promise.fromGenerator(function* (val) {
+PingPong.prototype.pong = Promise.async(function* (val) {
     console.log("Pong!", val)
     yield Promise.delay(500);
     this.ping(val+1)
@@ -1230,7 +1231,7 @@ You can use [`Promise.join`] to wait for multiple promises at once.
 You can combine it with ES6 destructuring for some neat syntax:
 
 ```js
-var getData = Promise.fromGenerator(function* (urlA, urlB) {
+var getData = Promise.async(function* (urlA, urlB) {
     [resultA, resultB] = yield Promise.join(http.getAsync(urlA), http.getAsync(urlB));
     //use resultA
     //use resultB
@@ -1240,7 +1241,7 @@ var getData = Promise.fromGenerator(function* (urlA, urlB) {
 You might wonder why not just do this?
 
 ```js
-var getData = Promise.fromGenerator(function* (urlA, urlB) {
+var getData = Promise.async(function* (urlA, urlB) {
     var resultA = yield http.getAsync(urlA);
     var resultB = yield http.getAsync(urlB);
 });
@@ -1250,6 +1251,8 @@ The problem with the above is that the requests are not done in
 parallel. It will completely wait for request A to complete before
 even starting request B. In the example with [`Promise.join`] both
 requests fire off at the same time in parallel.
+
+See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasyncgeneratorfunction).
 
 <hr>
 
