@@ -27,6 +27,6 @@
     "jshint": "~2.4.3"
   },
   "dependencies": {
-    "es6-shim": "paulmillr/es6-shim#c1850845534c43f56cc4d4ec6dec83eb6e5be555"
+    "es6-shim": "~0.10.0"
   }
 }
