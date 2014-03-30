@@ -20,14 +20,14 @@ Portions of the API and test suite are borrowed from [bluebird] and [when].
 To use the promise implementation from your ES6 engine (or [es6-shim], if
 you are running on an ES5 engine):
 ```
-require('prfun')();
+require('prfun');
 
 // Use Promise.reduce, etc...
 ```
 
 To use a different promise implementation:
 ```
-var prfun = require('prfun');
+var prfun = require('prfun/wrap');
 var Promise = prfun( require('bluebird'/*etc*/) );
 ```
 

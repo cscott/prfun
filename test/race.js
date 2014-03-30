@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-require('../')();
+require('../');
 
 var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);

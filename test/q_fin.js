@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-require('../')();
+require('../');
 
 function fail(done) {
   return function(e) { done(e); };
