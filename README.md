@@ -56,6 +56,7 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#return`]
     - [`Promise#throw`]
     - [`Promise.defer`]
+    - [`Promise#done`]
 - [Try/caught/finally](#trycaughtfinally)
     - [`Promise.try`]
     - [`Promise#caught`]
@@ -642,6 +643,23 @@ in the [when] package.  The `callback` property returns a node-style
 callback function with signature `(err, result)` which will invoke
 `reject` and `resolve` as appropriate.  This is like the `callback`
 property in [bluebird] or the result of `makeNodeResolver` in [q].
+
+<hr>
+
+#### `Promise#done()` → `undefined`
+[`Promise#done`]: #promisedone--undefined
+
+Terminate a chain of promises, ensuring that any unhandled rejections
+are rethrown so as to trigger the top-level unhandled exception
+handler (which will typically result in a message on console).
+
+The use of `Promise#done` is discouraged---it is hoped that future
+promise implementations [will provide special development tools to
+track orphaned promises]
+(https://github.com/domenic/promises-unwrapping/issues/19).
+This method is provided for compatibility with older libraries,
+and as a make-do until better debugging tools are integrated
+into JavaScript engines.
 
 <hr>
 
