@@ -33,10 +33,6 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var sentinel = {};
 var other = {};
 
@@ -69,163 +65,175 @@ function fakeRejected(reason) {
 describe("Promise.defer", function () {
 
 
-  specify("should fulfill with an immediate value", function(done) {
+  specify("should fulfill with an immediate value", function() {
     var d = when.defer();
 
-    d.promise.then(
+    var p = d.promise.then(
       function(val) {
         assert.equal(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
 
     d.resolve(sentinel);
+
+    return p;
   });
 
-  specify("should fulfill with fulfilled promised", function(done) {
+  specify("should fulfill with fulfilled promised", function() {
     var d = when.defer();
 
-    d.promise.then(
+    var p = d.promise.then(
       function(val) {
         assert.equal(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
 
     d.resolve(fakeResolved(sentinel));
+
+    return p;
   });
 
-  specify("should reject with rejected promise", function(done) {
+  specify("should reject with rejected promise", function() {
     var d = when.defer();
 
-    d.promise.then(
+    var p = d.promise.then(
       assert.fail,
       function(val) {
         assert.equal(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
 
     d.resolve(fakeRejected(sentinel));
+
+    return p;
   });
 
-  specify("should return a promise for the resolution value", function(done) {
+  specify("should return a promise for the resolution value", function() {
     var d = when.defer();
 
     d.resolve(sentinel);
-    d.promise.then(
+    return d.promise.then(
       function(returnedPromiseVal) {
         assert.deepEqual(returnedPromiseVal, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should return a promise for a promised resolution value", function(done) {
+  specify("should return a promise for a promised resolution value", function() {
     var d = when.defer();
 
     d.resolve(when.resolve(sentinel));
-    d.promise.then(
+    return d.promise.then(
       function(returnedPromiseVal) {
         assert.deepEqual(returnedPromiseVal, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should return a promise for a promised rejection value", function(done) {
+  specify("should return a promise for a promised rejection value", function() {
     var d = when.defer();
 
     // Both the returned promise, and the deferred's own promise should
     // be rejected with the same value
     d.resolve(when.reject(sentinel));
-    d.promise.then(
+    return d.promise.then(
       assert.fail,
       function(returnedPromiseVal) {
         assert.deepEqual(returnedPromiseVal, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should invoke newly added callback when already resolved", function(done) {
+  specify("should invoke newly added callback when already resolved", function() {
     var d = when.defer();
 
     d.resolve(sentinel);
 
-    d.promise.then(
+    return d.promise.then(
       function(val) {
         assert.equal(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 
 
 
-  specify("should reject with an immediate value", function(done) {
+  specify("should reject with an immediate value", function() {
     var d = when.defer();
 
-    d.promise.then(
+    var p = d.promise.then(
       assert.fail,
       function(val) {
         assert.equal(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
 
     d.reject(sentinel);
+
+    return p;
   });
 
-  specify("should reject with fulfilled promised", function(done) {
+  specify("should reject with fulfilled promised", function() {
     var d, expected;
 
     d = when.defer();
     expected = fakeResolved(sentinel);
 
-    d.promise.then(
+    var p = d.promise.then(
       assert.fail,
       function(val) {
         assert.equal(val, expected);
       }
-    ).then(done, fail(done));
+    );
 
     d.reject(expected);
+
+    return p;
   });
 
-  specify("should reject with rejected promise", function(done) {
+  specify("should reject with rejected promise", function() {
     var d, expected;
 
     d = when.defer();
     expected = fakeRejected(sentinel);
 
-    d.promise.then(
+    var p = d.promise.then(
       assert.fail,
       function(val) {
         assert.equal(val, expected);
       }
-    ).then(done, fail(done));
+    );
 
     d.reject(expected);
+
+    return p;
   });
 
 
-  specify("should return a promise for the rejection value", function(done) {
+  specify("should return a promise for the rejection value", function() {
     var d = when.defer();
 
     // Both the returned promise, and the deferred's own promise should
     // be rejected with the same value
     d.reject(sentinel);
-    d.promise.then(
+    return d.promise.then(
       assert.fail,
       function(returnedPromiseVal) {
         assert.deepEqual(returnedPromiseVal, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should invoke newly added errback when already rejected", function(done) {
+  specify("should invoke newly added errback when already rejected", function() {
     var d = when.defer();
 
     d.reject(sentinel);
 
-    d.promise.then(
+    return d.promise.then(
       assert.fail,
       function (val) {
         assert.deepEqual(val, sentinel);
       }
-    ).then(done, fail(done));
+    );
   });
 });

@@ -33,10 +33,6 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var reject = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var delay = Promise.delay.bind(Promise);
 
 describe("when.map-test", function () {
@@ -49,153 +45,91 @@ describe("when.map-test", function () {
     return delay(mapper(val), Math.random()*10);
   }
 
-  specify("should map input values array", function(done) {
+  specify("should map input values array", function() {
     var input = [1, 2, 3];
-    when.map(input, mapper).then(
+    return when.map(input, mapper).then(
       function(results) {
         assert.deepEqual(results, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should map input promises array", function(done) {
+  specify("should map input promises array", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.map(input, mapper).then(
+    return when.map(input, mapper).then(
       function(results) {
         assert.deepEqual(results, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should map mixed input array", function(done) {
+  specify("should map mixed input array", function() {
     var input = [1, resolved(2), 3];
-    when.map(input, mapper).then(
+    return when.map(input, mapper).then(
       function(results) {
         assert.deepEqual(results, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should map input when mapper returns a promise", function(done) {
+  specify("should map input when mapper returns a promise", function() {
     var input = [1,2,3];
-    when.map(input, deferredMapper).then(
+    return when.map(input, deferredMapper).then(
       function(results) {
         assert.deepEqual(results, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should accept a promise for an array (1)", function(done) {
-    when.map(resolved([1, resolved(2), 3]), mapper).then(
+  specify("should accept a promise for an array (1)", function() {
+    return when.map(resolved([1, resolved(2), 3]), mapper).then(
       function(result) {
         assert.deepEqual(result, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should accept a promise for an array (2)", function(done) {
-    resolved([1, resolved(2), 3]).map(mapper).then(
+  specify("should accept a promise for an array (2)", function() {
+    return resolved([1, resolved(2), 3]).map(mapper).then(
       function(result) {
         assert.deepEqual(result, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve to empty array when input promise does not resolve to an array (1)", function(done) {
-    when.map(resolved(123), mapper).then(
+  specify("should resolve to empty array when input promise does not resolve to an array (1)", function() {
+    return when.map(resolved(123), mapper).then(
       function(result) {
         assert.deepEqual(result, []);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve to empty array when input promise does not resolve to an array (2)", function(done) {
-    resolved(123).map(mapper).then(
+  specify("should resolve to empty array when input promise does not resolve to an array (2)", function() {
+    return resolved(123).map(mapper).then(
       function(result) {
         assert.deepEqual(result, []);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should map input promises when mapper returns a promise", function(done) {
+  specify("should map input promises when mapper returns a promise", function() {
     var input = [resolved(1),resolved(2),resolved(3)];
-    when.map(input, mapper).then(
+    return when.map(input, mapper).then(
       function(results) {
         assert.deepEqual(results, [2,4,6]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject when input contains rejection", function(done) {
+  specify("should reject when input contains rejection", function() {
     var input = [resolved(1), reject(2), resolved(3)];
-    when.map(input, mapper).then(
+    return when.map(input, mapper).then(
       function() { throw new Error('should not reach here'); },
       function(result) {
         assert( result === 2 );
       }
-    ).then(done, fail(done));
+    );
   });
 
-/*
-  specify("should propagate progress", function(done) {
-    var input = [1, 2, 3];
-    var donecalls = 0;
-    function donecall() {
-      if( ++donecalls === 3 ) done();
-    }
-
-    when.map(input, function(x) {
-      var d = when.pending();
-      d.progress(x);
-      setTimeout(d.fulfill.bind(d, x), 0);
-      return d.promise;
-    }).then(null, null, function(update) {
-      assert(update.value === input.shift());
-      donecall();
-    });
-  });
-
-  specify("should propagate progress 2", function(done) {
-    // Thanks @depeele for this test
-    var input, ncall;
-
-    input = [_resolver(1), _resolver(2), _resolver(3)];
-    ncall = 0;
-
-    function identity(x) {
-      return x;
-    }
-    //This test didn't contain the mapper argument so I assume
-    //when.js uses identity mapper in such cases.
-
-    //In bluebird it's illegal to call Promise.map without mapper function
-    return when.map(input, identity).then(function () {
-      assert(ncall === 6);
-      done();
-    }, fail, function () {
-      ncall++;
-    });
-
-    function _resolver(id) {
-      var p = when.defer();
-
-      setTimeout(function () {
-        var loop, timer;
-
-        loop = 0;
-        timer = setInterval(function () {
-          p.notify(id);
-          loop++;
-          if (loop === 2) {
-            clearInterval(timer);
-            p.resolve(id);
-          }
-        }, 1);
-      }, 0);
-
-      return p.promise;
-    }
-
-  });
-*/
 });

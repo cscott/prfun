@@ -7,10 +7,6 @@ var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 var pending = Promise.defer.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var obj = {};
 var error = new Error();
 
@@ -32,13 +28,14 @@ describe("Promise.method", function(){
     return this;
   });
 
-  specify("should reject when the function throws", function(done) {
+  specify("should reject when the function throws", function() {
     var async = false;
-    thrower().then(assert.fail, function(e) {
+    var p = thrower().then(assert.fail, function(e) {
       assert(async);
       assert(e === error);
-    }).then(done, fail(done));
+    });
     async = true;
+    return p;
   });
 
   specify("should throw when the function is not a function", function() {
@@ -51,50 +48,53 @@ describe("Promise.method", function(){
     }
   });
 
-  specify("should call the function with the given receiver", function(done){
+  specify("should call the function with the given receiver", function() {
     var async = false;
-    receiver.call(obj).then(function(val) {
+    var p = receiver.call(obj).then(function(val) {
       assert(async);
       assert(val === obj);
-    }).then(done, fail(done));
+    });
     async = true;
+    return p;
   });
 
-  specify("should call the function with the given value", function(done){
+  specify("should call the function with the given value", function() {
     var async = false;
-    identity(obj).then(function(val) {
+    var p = identity(obj).then(function(val) {
       assert(async);
       assert(val === obj);
-    }).then(done, fail(done));
+    });
     async = true;
+    return p;
   });
 
-  specify("should apply the function if given value is array", function(done){
+  specify("should apply the function if given value is array", function() {
     var async = false;
-    array(1, 2, 3).then(function(val) {
+    var p = array(1, 2, 3).then(function(val) {
       assert(async);
       assert.deepEqual(val, [1,2,3]);
-    }).then(done, fail(done));
+    });
     async = true;
+    return p;
   });
 
-  specify("should unwrap returned promise", function(done){
+  specify("should unwrap returned promise", function() {
     var d = pending();
 
-    Promise.method(function(){
+    var p = Promise.method(function(){
       return d.promise;
     })().then(function(v){
       assert.deepEqual(v, 3);
-    }).then(done, fail(done));
+    });
 
     setTimeout(function(){
       d.resolve(3);
     }, 13);
+    return p;
   });
 
-  specify("should unwrap returned thenable", function(done){
-
-    Promise.method(function(){
+  specify("should unwrap returned thenable", function() {
+    return Promise.method(function(){
       return {
         then: function(f, v) {
           f(3);
@@ -102,19 +102,20 @@ describe("Promise.method", function(){
       };
     })().then(function(v){
       assert.deepEqual(v, 3);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should unwrap this and arguments", function(done){
+  specify("should unwrap this and arguments", function() {
     var THIS = {};
     var pThis = pending();
     var f = Promise.method(function(v) {
       assert(this === THIS);
       assert(v === 42);
     });
-    f.call(pThis.promise, fulfilled(42)).then(done, fail(done));
+    var p = f.call(pThis.promise, fulfilled(42));
     setTimeout(function(){
       pThis.resolve(THIS);
     }, 10);
+    return p;
   });
 });

@@ -3,10 +3,6 @@
 var assert = require('assert');
 require('../');
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var sentinel = {};
 var other = {};
 
@@ -38,7 +34,7 @@ describe('Promise.guard', function () {
     assert.equal(called, 1);
   });
 
-  it('should invoke guarded function after condition promise fulfills', function(done) {
+  it('should invoke guarded function after condition promise fulfills', function() {
     var condition, f, guarded;
     var calls = [];
 
@@ -46,12 +42,12 @@ describe('Promise.guard', function () {
     f = mkspy(calls);
     guarded = Promise.guard(condition, f);
 
-    guarded.call(null, sentinel).then(function() {
+    return guarded.call(null, sentinel).then(function() {
       assert.deepEqual(calls, [[null, sentinel]]);
-    }).then(done, fail(done));
+    });
   });
 
-  it('should notify condition once guarded function settles', function(done) {
+  it('should notify condition once guarded function settles', function() {
     var condition, notify, guarded;
     var calls = [];
 
@@ -59,12 +55,12 @@ describe('Promise.guard', function () {
     condition = function() { return notify; };
     guarded = Promise.guard(condition, noop);
 
-    guarded().then(function() {
+    return guarded().then(function() {
       assert.equal(calls.length, 1);
-    }).then(done, fail(done));
+    });
   });
 
-  it('should initiate next guarded call after notify', function(done) {
+  it('should initiate next guarded call after notify', function() {
     var condition, f, guarded;
     var calls = [];
 
@@ -72,13 +68,13 @@ describe('Promise.guard', function () {
     condition = function() { return noop; };
     guarded = Promise.guard(condition, f);
 
-    guarded(other).then(function() {
+    return guarded(other).then(function() {
       assert.equal(calls.length, 1);
       return guarded(sentinel).then(function() {
         assert.equal(calls.length, 2);
         assert.deepEqual(calls[1], [undefined, sentinel]);
       });
-    }).then(done, fail(done));
+    });
   });
 
   describe('n', function() {
@@ -91,14 +87,14 @@ describe('Promise.guard', function () {
       assert.equal(typeof c().then, 'function');
     });
 
-    it('returned promise should resolve to a function', function(done) {
+    it('returned promise should resolve to a function', function() {
       var enter = Promise.guard.n(1);
-      enter().then(function(exit) {
+      return enter().then(function(exit) {
         assert.equal(typeof exit, 'function');
-      }).then(done, fail(done));
+      });
     });
 
-    it('should allow one execution', function(done) {
+    it('should allow one execution', function() {
       var enter, value, first, second;
 
       enter = Promise.guard.n(1);
@@ -118,10 +114,10 @@ describe('Promise.guard', function () {
         value = other;
       });
 
-      Promise.join(p1, p2).return().then(done, fail(done));
+      return Promise.join(p1, p2);
     });
 
-    it('should allow two executions', function(done) {
+    it('should allow two executions', function() {
       var one, value, first, second, third;
 
       one = Promise.guard.n(2);
@@ -144,7 +140,7 @@ describe('Promise.guard', function () {
 
       var p3 = third.then(function() { value = other; });
 
-      Promise.join(p1, p2, p3).return().then(done, fail(done));
+      return Promise.join(p1, p2, p3);
       });
   });
 });

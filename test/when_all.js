@@ -33,128 +33,127 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 describe("when.all-test", function () {
 
-  specify("should resolve empty input", function(done) {
+  specify("should resolve empty input", function() {
     return when.all([]).then(
       function(result) {
         assert.deepEqual(result, []);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve promise of empty input", function(done) {
+  specify("should resolve promise of empty input", function() {
     return resolved([]).all().then(
       function(result) {
         assert.deepEqual(result, []);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve values array", function(done) {
+  specify("should resolve values array", function() {
     var input = [1, 2, 3];
-    when.all(input).then(
+    return when.all(input).then(
       function(results) {
         assert.deepEqual(results, input);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve promise of values array", function(done) {
+  specify("should resolve promise of values array", function() {
     var input = [1, 2, 3];
-    resolved(input).all().then(
+    return resolved(input).all().then(
       function(results) {
         assert.deepEqual(results, input);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve promises array", function(done) {
+  specify("should resolve promises array", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.all(input).then(
+    return when.all(input).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve promise of promises array", function(done) {
+  specify("should resolve promise of promises array", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    resolved(input).all().then(
+    return resolved(input).all().then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve sparse array input", function(done) {
+  specify("should resolve sparse array input", function() {
     var input = [, 1, , 1, 1 ];
-    when.all(input).then(
+    return when.all(input).then(
       function(results) {
         assert.deepEqual(JSON.stringify(results), JSON.stringify(input));
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve promise of sparse array input", function(done) {
+  specify("should resolve promise of sparse array input", function() {
     var input = [, 1, , 1, 1 ];
-    resolved(input).all().then(
+    return resolved(input).all().then(
       function(results) {
         assert.deepEqual(JSON.stringify(results), JSON.stringify(input));
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject if any input promise rejects", function(done) {
+  specify("should reject if any input promise rejects", function() {
     var input = [resolved(1), rejected(2), resolved(3)];
-    when.all(input).then(
+    return when.all(input).then(
       function() { throw new Error('should not reach here'); },
       function(failed) {
         assert.deepEqual(failed, 2);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject if any input promise rejects (2)", function(done) {
+  specify("should reject if any input promise rejects (2)", function() {
     var input = [resolved(1), rejected(2), resolved(3)];
-    resolved(input).all().then(
+    return resolved(input).all().then(
       function() { throw new Error('should not reach here'); },
       function(failed) {
         assert.deepEqual(failed, 2);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject if any input promise rejects (3)", function(done) {
+  specify("should reject if any input promise rejects (3)", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    rejected(input).all().then(
+    return rejected(input).all().then(
       function() { throw new Error('should not reach here'); },
       function(failed) {
         assert.deepEqual(failed.length, 3);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should accept a promise for an array", function(done) {
+  specify("should accept a promise for an array", function() {
     var expected, input;
 
     expected = [1, 2, 3];
     input = resolved(expected);
 
-    input.all().then(
+    return input.all().then(
       function(results) {
         assert.deepEqual(results, expected);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject when input promise does not resolve to array", function(done) {
-    when.all(resolved(1)).caught(TypeError, function(e){
-      done();
+  specify("should reject when input promise does not resolve to array", function() {
+    var caught = false;
+    return when.all(resolved(1)).caught(TypeError, function(e) {
+      caught = true;
+    }).then(function() {
+      assert.deepEqual(caught, true);
     });
   });
 

@@ -3,10 +3,6 @@
 var assert = require("assert");
 require('../');
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 /*!
  *
  Copyright 2009–2012 Kristopher Michael Kowal. All rights reserved.
@@ -35,65 +31,65 @@ describe("Promise#finally", function () {
   var exception2 = new TypeError("evil!");
 
   describe("when nothing is passed", function() {
-    it("should do nothing", function(done) {
-      Promise.resolve("foo")
+    it("should do nothing", function() {
+      return Promise.resolve("foo")
         ['finally']()
         ['finally']()
         ['finally']()
         ['finally']()
         .then(function(val){
           assert(val === "foo");
-        }).then(done, fail(done));
+        });
     });
   });
 
   describe("when the promise is fulfilled", function () {
 
-    it("should call the callback", function (done) {
+    it("should call the callback", function () {
       var called = false;
 
-      Promise.resolve("foo")
+      return Promise.resolve("foo")
         ['finally'](function () {
           called = true;
         })
         .then(function () {
           assert.equal(called,true);
-        }).then(done, fail(done));
+        });
     });
 
-    it("should fulfill with the original value", function (done) {
-      Promise.resolve("foo")
+    it("should fulfill with the original value", function () {
+      return Promise.resolve("foo")
         ['finally'](function () {
           return "bar";
         })
         .then(function (result) {
           assert.equal(result,"foo");
-        }).then(done, fail(done));
+        });
     });
 
     describe("when the callback returns a promise", function () {
 
       describe("that is fulfilled", function () {
-        it("should fulfill with the original reason after that promise resolves", function (done) {
+        it("should fulfill with the original reason after that promise resolves", function () {
           var pending = true;
           var promise = Promise.delay(null, 25).then(function() {
             pending = false;
           });
 
-          Promise.resolve("foo")
+          return Promise.resolve("foo")
             ['finally'](function () {
               return promise;
             })
             .then(function (result) {
               assert.equal(pending, false);
               assert.equal(result, "foo");
-            }).then(done, fail(done));
+            });
         });
       });
 
       describe("that is rejected", function () {
-        it("should reject with this new rejection reason", function (done) {
-          Promise.resolve("foo")
+        it("should reject with this new rejection reason", function () {
+          return Promise.resolve("foo")
             ['finally'](function () {
               return Promise.reject(exception1);
             })
@@ -101,15 +97,15 @@ describe("Promise#finally", function () {
               assert.fail();
             }, function (exception) {
               assert.equal(exception,exception1);
-            }).then(done, fail(done));
+            });
         });
       });
 
     });
 
     describe("when the callback throws an exception", function () {
-      it("should reject with this new exception", function (done) {
-        Promise.resolve("foo")
+      it("should reject with this new exception", function () {
+        return Promise.resolve("foo")
           ['finally'](function () {
             throw exception1;
           })
@@ -117,7 +113,7 @@ describe("Promise#finally", function () {
             assert.fail();
           }, function (exception) {
             assert.equal(exception,exception1);
-          }).then(done, fail(done));
+          });
       });
     });
 
@@ -125,10 +121,10 @@ describe("Promise#finally", function () {
 
   describe("when the promise is rejected", function () {
 
-    it("should call the callback", function (done) {
+    it("should call the callback", function () {
       var called = false;
 
-      Promise.reject(exception1)
+      return Promise.reject(exception1)
         ['finally'](function () {
           called = true;
         })
@@ -136,11 +132,11 @@ describe("Promise#finally", function () {
           assert.fail();
         }, function () {
           assert.equal(called,true);
-        }).then(done, fail(done));
+        });
     });
 
-    it("should reject with the original reason", function (done) {
-      Promise.reject(exception1)
+    it("should reject with the original reason", function () {
+      return Promise.reject(exception1)
         ['finally'](function () {
           return "bar";
         })
@@ -148,19 +144,19 @@ describe("Promise#finally", function () {
           assert.fail();
         }, function (exception) {
           assert.equal(exception,exception1);
-        }).then(done, fail(done));
+        });
     });
 
     describe("when the callback returns a promise", function () {
 
       describe("that is fulfilled", function () {
-        it("should reject with the original reason after that promise resolves", function (done) {
+        it("should reject with the original reason after that promise resolves", function () {
           var pending = true;
           var promise = Promise.delay(null, 25).then(function() {
             pending = false;
           });
 
-          Promise.reject(exception1)
+          return Promise.reject(exception1)
             ['finally'](function () {
               return promise;
             }).then(function () {
@@ -168,27 +164,27 @@ describe("Promise#finally", function () {
             }, function (exception) {
               assert.equal(pending, false);
               assert.equal(exception, exception1);
-            }).then(done, fail(done));
+            });
         });
       });
 
       describe("that is rejected", function () {
-        it("should reject with the new reason", function (done) {
-          Promise.reject(exception1)
+        it("should reject with the new reason", function () {
+          return Promise.reject(exception1)
             ['finally'](function () {
               return Promise.reject(exception2);
             }).then(function () {
               assert.fail();
             }, function (exception) {
               assert.equal(exception,exception2);
-            }).then(done, fail(done));
+            });
         });
       });
     });
 
     describe("when the callback throws an exception", function () {
-      it("should reject with this new exception", function (done) {
-        Promise.reject(exception1)
+      it("should reject with this new exception", function () {
+        return Promise.reject(exception1)
           ['finally'](function () {
             throw exception2;
           })
@@ -196,7 +192,7 @@ describe("Promise#finally", function () {
             assert.fail();
           }, function (exception) {
             assert.equal(exception,exception2);
-          }).then(done, fail(done));
+          });
       });
     });
   });
@@ -204,7 +200,7 @@ describe("Promise#finally", function () {
   describe("when the callback returns a thenable", function () {
 
     describe("that will fulfill", function () {
-      it("should reject with the original reason after that", function (done) {
+      it("should reject with the original reason after that", function () {
         var promise = {
           then: function(fn) {
             setTimeout(function(){
@@ -221,12 +217,12 @@ describe("Promise#finally", function () {
             assert.fail();
           }, function (exception) {
             assert.equal(exception,exception1);
-          }).then(done, fail(done));
+          });
       });
     });
 
     describe("that is rejected", function () {
-      it("should reject with the new reason", function (done) {
+      it("should reject with the new reason", function () {
         var promise = {
           then: function(f, fn) {
             setTimeout(function(){
@@ -243,7 +239,7 @@ describe("Promise#finally", function () {
             assert.fail();
           }, function (exception) {
             assert.equal(exception,exception2);
-          }).then(done, fail(done));
+          });
       });
     });
 

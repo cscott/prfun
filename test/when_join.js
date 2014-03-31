@@ -33,51 +33,47 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 describe("when.join-test", function () {
 
-  specify("should resolve empty input", function(done) {
+  specify("should resolve empty input", function() {
     return when.join().then(
       function(result) {
         assert.deepEqual(result, []);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should join values", function(done) {
-    when.join(1, 2, 3).then(
+  specify("should join values", function() {
+    return when.join(1, 2, 3).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should join promises array", function(done) {
-    when.join(resolved(1), resolved(2), resolved(3)).then(
+  specify("should join promises array", function() {
+    return when.join(resolved(1), resolved(2), resolved(3)).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should join mixed array", function(done) {
-    when.join(resolved(1), 2, resolved(3), 4).then(
+  specify("should join mixed array", function() {
+    return when.join(resolved(1), 2, resolved(3), 4).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3, 4]);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject if any input promise rejects", function(done) {
-    when.join(resolved(1), rejected(2), resolved(3)).then(
+  specify("should reject if any input promise rejects", function() {
+    return when.join(resolved(1), rejected(2), resolved(3)).then(
       function() { throw new Error('should not reach here'); },
       function(failed) {
         assert.deepEqual(failed, 2);
       }
-    ).then(done, fail(done));
+    );
   });
 
 });

@@ -33,10 +33,6 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var delay = Promise.delay.bind(Promise);
 
 var sentinel = {};
@@ -52,129 +48,134 @@ describe("when.reduce-test", function () {
   }
 
 
-  specify("should reduce values without initial value", function(done) {
-    when.reduce([1,2,3], plus).then(
+  specify("should reduce values without initial value", function() {
+    return when.reduce([1,2,3], plus).then(
       function(result) {
         assert.deepEqual(result, 6);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce values with initial value", function(done) {
-    when.reduce([1,2,3], plus, 1).then(
+  specify("should reduce values with initial value", function() {
+    return when.reduce([1,2,3], plus, 1).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce values with initial promise", function(done) {
-    when.reduce([1,2,3], plus, resolved(1)).then(
+  specify("should reduce values with initial promise", function() {
+    return when.reduce([1,2,3], plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce promised values without initial value", function(done) {
+  specify("should reduce promised values without initial value", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduce(input, plus).then(
+    return when.reduce(input, plus).then(
       function(result) {
         assert.deepEqual(result, 6);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce promised values with initial value", function(done) {
+  specify("should reduce promised values with initial value", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduce(input, plus, 1).then(
+    return when.reduce(input, plus, 1).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce promised values with initial promise", function(done) {
+  specify("should reduce promised values with initial promise", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduce(input, plus, resolved(1)).then(
+    return when.reduce(input, plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce empty input with initial value", function(done) {
+  specify("should reduce empty input with initial value", function() {
     var input = [];
-    when.reduce(input, plus, 1).then(
+    return when.reduce(input, plus, 1).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduce empty input with initial promise", function(done) {
-    when.reduce([], plus, resolved(1)).then(
+  specify("should reduce empty input with initial promise", function() {
+    return when.reduce([], plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject when input contains rejection", function(done) {
+  specify("should reject when input contains rejection", function() {
     var input = [resolved(1), rejected(2), resolved(3)];
-    when.reduce(input, plus, resolved(1)).then(
+    return when.reduce(input, plus, resolved(1)).then(
       function() { throw new Error('should not reach here'); },
       function(result) {
         assert.deepEqual(result, 2);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject with empty array", function(done) {
-    when.reduce([], plus).caught(TypeError, function(e) { done(); });
+  specify("should reject with empty array", function() {
+    var caught = false;
+    return when.reduce([], plus).caught(TypeError, function(e) {
+      caught = true;
+    }).then(function() {
+      assert.deepEqual(caught, true);
+    });
   });
 
-  specify("should reduce to initial value with empty array", function(done) {
-    when.reduce([], plus, sentinel).then(function(r){
+  specify("should reduce to initial value with empty array", function() {
+    return when.reduce([], plus, sentinel).then(function(r){
       assert(r === sentinel);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should reduce in left-to-right order", function(done) {
-    when.reduce([later(1), later(2), later(3)], plus, '').then(
+  specify("should reduce in left-to-right order", function() {
+    return when.reduce([later(1), later(2), later(3)], plus, '').then(
       function(result) {
         assert.deepEqual(result, '123');
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should accept a promise for an array", function(done) {
-    when.reduce(resolved([1, 2, 3]), plus, '').then(
+  specify("should accept a promise for an array", function() {
+    return when.reduce(resolved([1, 2, 3]), plus, '').then(
       function(result) {
         assert.deepEqual(result, '123');
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve to initialValue when input promise does not resolve to an array", function(done) {
-    when.reduce(resolved(123), plus, 1).then(
+  specify("should resolve to initialValue when input promise does not resolve to an array", function() {
+    return when.reduce(resolved(123), plus, 1).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should provide correct basis value", function(done) {
+  specify("should provide correct basis value", function() {
     function insertIntoArray(arr, val, i) {
       arr[i] = val;
       return arr;
     }
 
-    when.reduce([later(1), later(2), later(3)], insertIntoArray, []).then(
+    return when.reduce([later(1), later(2), later(3)], insertIntoArray, []).then(
       function(result) {
         assert.deepEqual(result, [1,2,3]);
       }
-    ).then(done, fail(done));
+    );
   });
 });
 
@@ -189,128 +190,133 @@ describe("when.reduceRight-test", function () {
   }
 
 
-  specify("should reduceRight values without initial value", function(done) {
-    when.reduceRight([1,2,3], plus).then(
+  specify("should reduceRight values without initial value", function() {
+    return when.reduceRight([1,2,3], plus).then(
       function(result) {
         assert.deepEqual(result, 6);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight values with initial value", function(done) {
-    when.reduceRight([1,2,3], plus, 1).then(
+  specify("should reduceRight values with initial value", function() {
+    return when.reduceRight([1,2,3], plus, 1).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight values with initial promise", function(done) {
-    when.reduceRight([1,2,3], plus, resolved(1)).then(
+  specify("should reduceRight values with initial promise", function() {
+    return when.reduceRight([1,2,3], plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight promised values without initial value", function(done) {
+  specify("should reduceRight promised values without initial value", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduceRight(input, plus).then(
+    return when.reduceRight(input, plus).then(
       function(result) {
         assert.deepEqual(result, 6);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight promised values with initial value", function(done) {
+  specify("should reduceRight promised values with initial value", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduceRight(input, plus, 1).then(
+    return when.reduceRight(input, plus, 1).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight promised values with initial promise", function(done) {
+  specify("should reduceRight promised values with initial promise", function() {
     var input = [resolved(1), resolved(2), resolved(3)];
-    when.reduceRight(input, plus, resolved(1)).then(
+    return when.reduceRight(input, plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 7);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight empty input with initial value", function(done) {
+  specify("should reduceRight empty input with initial value", function() {
     var input = [];
-    when.reduceRight(input, plus, 1).then(
+    return when.reduceRight(input, plus, 1).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reduceRight empty input with initial promise", function(done) {
-    when.reduceRight([], plus, resolved(1)).then(
+  specify("should reduceRight empty input with initial promise", function() {
+    return when.reduceRight([], plus, resolved(1)).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject when input contains rejection", function(done) {
+  specify("should reject when input contains rejection", function() {
     var input = [resolved(1), rejected(2), resolved(3)];
-    when.reduceRight(input, plus, resolved(1)).then(
+    return when.reduceRight(input, plus, resolved(1)).then(
       function() { throw new Error('should not reach here'); },
       function(result) {
         assert.deepEqual(result, 2);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should reject with empty array", function(done) {
-    when.reduceRight([], plus).caught(TypeError, function(e) { done(); });
+  specify("should reject with empty array", function() {
+    var caught = false;
+    return when.reduceRight([], plus).caught(TypeError, function(e) {
+      caught = true;
+    }).then(function() {
+      assert.deepEqual(caught, true);
+    });
   });
 
-  specify("should reduceRight to initial value with empty array", function(done) {
-    when.reduceRight([], plus, sentinel).then(function(r){
+  specify("should reduceRight to initial value with empty array", function() {
+    return when.reduceRight([], plus, sentinel).then(function(r){
       assert(r === sentinel);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should reduceRight in right-to-left order", function(done) {
-    when.reduceRight([later(1), later(2), later(3)], plus, '').then(
+  specify("should reduceRight in right-to-left order", function() {
+    return when.reduceRight([later(1), later(2), later(3)], plus, '').then(
       function(result) {
         assert.deepEqual(result, '321');
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should accept a promise for an array", function(done) {
-    when.reduceRight(resolved([1, 2, 3]), plus, '').then(
+  specify("should accept a promise for an array", function() {
+    return when.reduceRight(resolved([1, 2, 3]), plus, '').then(
       function(result) {
         assert.deepEqual(result, '321');
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should resolve to initialValue when input promise does not resolve to an array", function(done) {
-    when.reduceRight(resolved(123), plus, 1).then(
+  specify("should resolve to initialValue when input promise does not resolve to an array", function() {
+    return when.reduceRight(resolved(123), plus, 1).then(
       function(result) {
         assert.deepEqual(result, 1);
       }
-    ).then(done, fail(done));
+    );
   });
 
-  specify("should provide correct basis value", function(done) {
+  specify("should provide correct basis value", function() {
     function insertIntoArray(arr, val, i) {
       arr[i] = val;
       return arr;
     }
 
-    when.reduceRight([later(1), later(2), later(3)], insertIntoArray, []).then(
+    return when.reduceRight([later(1), later(2), later(3)], insertIntoArray, []).then(
       function(result) {
         assert.deepEqual(result, [1,2,3]);
       }
-    ).then(done, fail(done));
+    );
   });
 });

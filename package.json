@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/cscott/prfun",
   "devDependencies": {
-    "mocha": "~1.17.1",
+    "mocha": "~1.18.2",
     "jshint": "~2.4.3"
   },
   "dependencies": {

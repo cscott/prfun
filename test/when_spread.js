@@ -33,10 +33,6 @@ var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 describe("when.spread-test", function () {
   var slice = [].slice;
 
@@ -44,55 +40,55 @@ describe("when.spread-test", function () {
     assert( typeof (resolved([1,2]).spread().then) === "function");
   });
 
-  specify("should apply onFulfilled with array as argument list", function(done) {
+  specify("should apply onFulfilled with array as argument list", function() {
     var expected = [1, 2, 3];
     return when.resolve(expected).spread(function() {
       assert.deepEqual(slice.call(arguments), expected);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should resolve array contents", function(done) {
+  specify("should resolve array contents", function() {
     var expected = [when.resolve(1), 2, when.resolve(3)];
     return when.resolve(expected).spread(function() {
       assert.deepEqual(slice.call(arguments), [1, 2, 3]);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should reject if any item in array rejects (1)", function(done) {
+  specify("should reject if any item in array rejects (1)", function() {
     var expected = [when.resolve(1), 2, when.reject(3)];
     return when.resolve(expected)
       .spread(assert.fail).then(assert.fail, function(result) {
         assert.deepEqual(result, 3);
-      }).then(done, fail(done));
+      });
   });
 
-  specify("should reject if any item in array rejects (2)", function(done) {
+  specify("should reject if any item in array rejects (2)", function() {
     var expected = [when.resolve(1), 2, when.resolve(3)];
     return when.reject(expected)
       .spread(assert.fail).then(assert.fail, function(result) {
         assert.deepEqual(result.length, 3);
-      }).then(done, fail(done));
+      });
   });
 
-  specify("should apply onFulfilled with array as argument list", function(done) {
+  specify("should apply onFulfilled with array as argument list", function() {
     var expected = [1, 2, 3];
     return when.resolve(when.resolve(expected)).spread(function() {
       assert.deepEqual(slice.call(arguments), expected);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should resolve array contents", function(done) {
+  specify("should resolve array contents", function() {
     var expected = [when.resolve(1), 2, when.resolve(3)];
     return when.resolve(when.resolve(expected)).spread(function() {
       assert.deepEqual(slice.call(arguments), [1, 2, 3]);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("should resolve array contents in rejection", function(done) {
+  specify("should resolve array contents in rejection", function() {
     var expected = [when.resolve(1), 2, when.resolve(3)];
     return when.reject(expected).spread(assert.fail, function() {
       assert.deepEqual(slice.call(arguments), [1, 2, 3]);
-    }).then(done, fail(done));
+    });
   });
 
 });

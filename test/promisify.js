@@ -3,10 +3,6 @@
 var assert = require("assert");
 require('../');
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 var RejectionError = function() {};
 
 var erroneousNode = function(a, b, c, cb) {
@@ -73,7 +69,7 @@ var syncSuccessMulti = Promise.promisify(syncSuccessNodeMultipleValues);
 describe("when calling promisified function it should ", function(){
 
 
-  specify("return a promise that is pending", function(done) {
+  specify("return a promise that is pending", function() {
     var pending = true;
     var a = error(1,2,3);
     var b = success(1,2,3);
@@ -83,21 +79,13 @@ describe("when calling promisified function it should ", function(){
     b['finally'](function(){ pending=false; });
     c['finally'](function(){ pending=false; });
 
-    var calls = 0;
-    function donecall() {
-      if( (++calls) === 1 ) {
-        done();
-      }
-    }
-
     assert.equal(pending, true);
 
-    a.then(assert.fail, function() { /* caught */ })
-      .return(b).return(c).return()
-      .then(done, fail(done));
+    return a.then(assert.fail, function() { /* caught */ })
+      .return(b).return(c).return();
   });
 
-  specify( "should use this if no receiver was given", function(done){
+  specify( "should use this if no receiver was given", function() {
     var o = {};
     var fn = Promise.promisify(function(cb){
 
@@ -106,9 +94,9 @@ describe("when calling promisified function it should ", function(){
 
     o.fn = fn;
 
-    o.fn().then(function(val){
+    return o.fn().then(function(val){
       assert(val);
-    }).then(done, fail(done));
+    });
   });
 
   specify("call future attached handlers later", function(done) {
@@ -138,10 +126,10 @@ describe("when calling promisified function it should ", function(){
     }, 20);
   });
 
-  specify("Reject with the synchronously caught reason", function(done){
-    thrower(1, 2, 3).then(assert.fail, function(e){
+  specify("Reject with the synchronously caught reason", function() {
+    return thrower(1, 2, 3).then(assert.fail, function(e){
       assert(e === errToThrow);
-    }).then(done, fail(done));
+    });
   });
 
   specify("reject with the proper reason", function(done) {
@@ -164,37 +152,31 @@ describe("when calling promisified function it should ", function(){
     });
   });
 
-  specify("fulfill with proper value(s)", function(done) {
+  specify("fulfill with proper value(s)", function() {
     var a = success(1,2,3);
     var b = successMulti(1,2,3);
     var c = syncSuccess(1,2,3);
     var d = syncSuccessMulti(1,2,3);
-    var calls = 0;
-    function donecall() {
-      if( (++calls) === 4 ) {
-        done();
-      }
-    }
+
+    return Promise.join(
 
     a.then(function( val ){
       assert.equal(val, sentinel);
-      donecall();
-    });
+    }),
 
     b.then(function( val ){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
-      donecall();
-    });
+    }),
 
     c.then(function( val ){
       assert.equal(val, sentinel);
-      donecall();
-    });
+    }),
 
     d.then(function( val ){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
-      donecall();
-    });
+    })
+
+    );
   });
 
 
@@ -214,13 +196,13 @@ describe("with more than 5 arguments", function(){
 
   var prom = Promise.promisify(o.f, o);
 
-  specify("receiver should still work", function(done) {
-    prom(1,2,3,4,5,6,7).then(function(val){
+  specify("receiver should still work", function() {
+    return prom(1,2,3,4,5,6,7).then(function(val){
       assert.deepEqual(
         val,
         [1,2,3,4,5,6,7, 15]
       );
-    }).then(done, fail(done));
+    });
 
   });
 
@@ -228,52 +210,52 @@ describe("with more than 5 arguments", function(){
 
 // In prfun, we don't wrap primitive errors.
 describe.skip("Primitive errors wrapping", function() {
-  specify("when the node function throws it", function(done){
-    throwsStrings().then(assert.fail, function(e){
+  specify("when the node function throws it", function() {
+    return throwsStrings().then(assert.fail, function(e){
       assert(e instanceof Error);
       assert(e.message == tprimitive);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("when the node function throws it inside then", function(done){
-    Promise.resolve().then(function() {
+  specify("when the node function throws it inside then", function() {
+    return Promise.resolve().then(function() {
       return throwsStrings().then(assert.fail, function(e) {
         assert(e instanceof Error);
         assert(e.message === tprimitive);
-      }).then(done, fail(done));
+      });
     });
   });
 
 
-  specify("when the node function errbacks it synchronously", function(done){
-    errbacksStrings().then(assert.fail, function(e){
+  specify("when the node function errbacks it synchronously", function() {
+    return errbacksStrings().then(assert.fail, function(e){
       assert(e instanceof Error);
       assert(e.message == tprimitive);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("when the node function errbacks it synchronously inside then", function(done){
-    Promise.resolve().then(function(){
+  specify("when the node function errbacks it synchronously inside then", function() {
+    return Promise.resolve().then(function(){
       errbacksStrings().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);
-      }).then(done, fail(done));
+      });
     });
   });
 
-  specify("when the node function errbacks it asynchronously", function(done){
-    errbacksStringsAsync().then(assert.fail, function(e){
+  specify("when the node function errbacks it asynchronously", function() {
+    return errbacksStringsAsync().then(assert.fail, function(e){
       assert(e instanceof Error);
       assert(e.message == tprimitive);
-    }).then(done, fail(done));
+    });
   });
 
-  specify("when the node function errbacks it asynchronously inside then", function(done){
-    Promise.resolve().then(function(){
+  specify("when the node function errbacks it asynchronously inside then", function() {
+    return Promise.resolve().then(function(){
       errbacksStringsAsync().then(assert.fail, function(e){
         assert(e instanceof Error);
         assert(e.message == tprimitive);
-      }).then(done, fail(done));
+      });
     });
   });
 });

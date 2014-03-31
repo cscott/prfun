@@ -3,10 +3,6 @@
 var assert = require("assert");
 require('../');
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
 /*
   Copyright 2009–2012 Kristopher Michael Kowal. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,51 +25,50 @@ function fail(done) {
 */
 
 describe("timeout", function () {
-  it("should do nothing if the promise fulfills quickly", function (done) {
-    Promise.delay(10).timeout(200).
-      then(done, fail(done));
+  it("should do nothing if the promise fulfills quickly", function () {
+    return Promise.delay(10).timeout(200);
   });
 
-  it("should do nothing if the promise rejects quickly", function (done) {
+  it("should do nothing if the promise rejects quickly", function () {
     var goodError = new Error("haha!");
-    Promise.delay(10)
+    return Promise.delay(10)
       .then(function () {
         throw goodError;
       })
       .timeout(200)
       .then(assert.fail, function (error) {
         assert(error === goodError);
-      }).then(done, fail(done));
+      });
   });
 
-  it("should reject with a timeout error if the promise is too slow", function (done) {
+  it("should reject with a timeout error if the promise is too slow", function () {
     var caught = false;
-    Promise.delay(100)
+    return Promise.delay(100)
       .timeout(10)
       .caught(Promise.TimeoutError, function(){
         caught = true;
       }).then(function() {
         assert(caught);
-      }).then(done, fail(done));
+      });
   });
 
-  it("should reject with a custom timeout error if the promise is too slow and msg was provided", function (done) {
+  it("should reject with a custom timeout error if the promise is too slow and msg was provided", function () {
     var caught = false;
-    Promise.delay(100)
+    return Promise.delay(100)
       .timeout(10, "custom")
       .caught(Promise.TimeoutError, function(e){
         assert(/custom/i.test(e.message));
         caught = true;
       }).then(function() {
         assert(caught);
-      }).then(done, fail(done));
+      });
   });
 });
 
 describe("delay", function () {
   it("should delay fulfillment", function (done) {
     var pending = true;
-    var promise = Promise.delay(30)['finally'](function() { pending = false; });
+    Promise.delay(30)['finally'](function() { pending = false; }).done();
 
     setTimeout(function () {
       assert(pending);
@@ -84,18 +79,19 @@ describe("delay", function () {
     }, 15);
   });
 
-  it("should not delay rejection", function (done) {
+  it("should not delay rejection", function () {
     var pending = true;
-    var promise = Promise.reject(5).delay(50)['finally'](function() { pending = false; });
+    Promise.reject(5).delay(50)['finally'](function() { pending = false; })
+      ['catch'](function(){}).done();
 
-    Promise.delay(20).then(function () {
+    return Promise.delay(20).then(function () {
       assert(!pending);
-    }).then(done, fail(done));
+    });
   });
 
   it("should treat a single argument as a time", function (done) {
     var pending = true;
-    var promise = Promise.delay(60)['finally'](function() { pending = false; });
+    Promise.delay(60)['finally'](function() { pending = false; }).done();
 
     setTimeout(function () {
       assert(pending);
@@ -104,29 +100,29 @@ describe("delay", function () {
 
   });
 
-  it("should treat two arguments as a value + a time", function (done) {
+  it("should treat two arguments as a value + a time", function () {
     var pending = true;
     var promise =
       Promise.delay("what", 40)['finally'](function() { pending = false; });
 
-    Promise.delay(20).then(function () {
+    return Promise.delay(20).then(function () {
       assert(pending);
     }).then(function() {
       return promise;
     }).then(function (value) {
       assert(!pending);
       assert(value === "what");
-    }).then(done, fail(done));
+    });
   });
 
-  it("should delay after resolution", function (done) {
+  it("should delay after resolution", function () {
     var promise1 = Promise.delay("what", 20);
     var promise2 = promise1.delay(40);
     var pending1 = true, pending2 = true;
     promise1 = promise1['finally'](function() { pending1 = false; });
     promise2 = promise2['finally'](function() { pending2 = false; });
 
-    Promise.delay(40).then(function() {
+    return Promise.delay(40).then(function() {
       assert(!pending1);
       assert(pending2);
     }).then(function() {
@@ -134,6 +130,6 @@ describe("delay", function () {
     }).then(function (value) {
       assert(!pending2);
       assert(value === "what");
-    }).then(done, fail(done));
+    });
   });
 });

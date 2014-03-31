@@ -3,11 +3,6 @@
 var assert = require("assert");
 require('../');
 
-function fail(done) {
-  return function(e) { done(e); };
-}
-
-
 /*
   Copyright 2009–2012 Kristopher Michael Kowal. All rights reserved.
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,32 +33,32 @@ describe("Promise#nodify", function () {
     };
   };
 
-  it("calls back with a resolution", function (done) {
+  it("calls back with a resolution", function () {
     var calls = [];
     var spy = mkspy(calls);
 
     Promise.resolve(10).nodify(spy);
 
-    Promise.delay(null, 10).then(function() {
+    return Promise.delay(null, 10).then(function() {
       assert.deepEqual(calls, [[undefined, null, 10]]);
-    }).then(done, fail(done));
+    });
   });
 
-  it("calls back with an error", function (done) {
+  it("calls back with an error", function () {
     var calls = [];
     var spy = mkspy(calls);
 
     Promise.reject(10).nodify(spy);
 
-    Promise.delay(null, 10).then(function() {
+    return Promise.delay(null, 10).then(function() {
       assert.deepEqual(calls, [[undefined, 10]]);
-    }).then(done, fail(done));
+    });
   });
 
-  it("forwards a promise", function (done) {
+  it("forwards a promise", function () {
     return Promise.resolve(10).nodify().then(function (ten) {
       assert.deepEqual(ten, 10);
-    }).then(done, fail(done));
+    });
   });
 
 });
