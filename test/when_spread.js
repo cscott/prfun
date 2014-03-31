@@ -38,6 +38,8 @@ describe("when.spread-test", function () {
 
   specify("should return a promise", function() {
     assert( typeof (resolved([1,2]).spread().then) === "function");
+    // return a promise from all synchronous tests, for consistency
+    return resolved();
   });
 
   specify("should apply onFulfilled with array as argument list", function() {

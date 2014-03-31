@@ -20,6 +20,8 @@ describe('Promise.guard', function () {
 
   it('should return a function', function() {
     assert.equal(typeof Promise.guard(), 'function');
+    // return a promise from all synchronous tests, for consistency
+    return Promise.resolve();
   });
 
   it('should invoke condition', function() {
@@ -32,6 +34,9 @@ describe('Promise.guard', function () {
     guarded();
 
     assert.equal(called, 1);
+
+    // return a promise from all synchronous tests, for consistency
+    return Promise.resolve();
   });
 
   it('should invoke guarded function after condition promise fulfills', function() {
@@ -80,11 +85,15 @@ describe('Promise.guard', function () {
   describe('n', function() {
     it('should create a function', function() {
       assert.equal(typeof Promise.guard.n(1), 'function');
+      // return a promise from all synchronous tests, for consistency
+      return Promise.resolve();
     });
 
     it('should return a promise', function() {
       var c = Promise.guard.n(1);
       assert.equal(typeof c().then, 'function');
+      // return a promise from all synchronous tests, for consistency
+      return Promise.resolve();
     });
 
     it('returned promise should resolve to a function', function() {

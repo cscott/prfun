@@ -46,6 +46,8 @@ describe("Promise.method", function(){
     catch(e) {
       assert(e instanceof TypeError);
     }
+    // return a promise from all synchronous tests, for consistency
+    return Promise.resolve();
   });
 
   specify("should call the function with the given receiver", function() {
