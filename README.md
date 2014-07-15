@@ -1093,7 +1093,7 @@ request("http://www.google.com").spread(function(response, body) {
 The above uses the [request](https://github.com/mikeal/request)
 library which has a callback signature of multiple success values.
 
-Since `prfun` version 0.2.0.
+Since `prfun` version 1.0.0.
 <hr>
 
 ### Timers

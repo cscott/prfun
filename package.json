@@ -1,6 +1,6 @@
 {
   "name": "prfun",
-  "version": "0.1.0-git",
+  "version": "1.0.0",
   "description": "Helper functions for ES6 promises",
   "main": "index.js",
   "scripts": {
