@@ -61,10 +61,10 @@ var errbacksStringsAsync = Promise.promisify(function(cb){
 
 var error = Promise.promisify(erroneousNode);
 var success = Promise.promisify(successNode);
-var successMulti = Promise.promisify(successNodeMultipleValues);
+var successMulti = Promise.promisify(successNodeMultipleValues, true);
 var syncError = Promise.promisify(syncErroneousNode);
 var syncSuccess = Promise.promisify(syncSuccessNode);
-var syncSuccessMulti = Promise.promisify(syncSuccessNodeMultipleValues);
+var syncSuccessMulti = Promise.promisify(syncSuccessNodeMultipleValues, true);
 
 describe("when calling promisified function it should ", function(){
 
@@ -194,7 +194,7 @@ describe("with more than 5 arguments", function(){
 
   };
 
-  var prom = Promise.promisify(o.f, o);
+  var prom = Promise.promisify(o.f, false, o);
 
   specify("receiver should still work", function() {
     return prom(1,2,3,4,5,6,7).then(function(val){

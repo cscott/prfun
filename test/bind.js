@@ -280,7 +280,7 @@ describe("when using .bind", function() {
     describe("this should refer to the bound object", function() {
       specify("on success", function() {
         var obj = { foo: function(cb) { cb(null, this.bar); }, bar: 42 };
-        var foo = Promise.bind(THIS).constructor.promisify(obj.foo, obj);
+        var foo = Promise.bind(THIS).constructor.promisify(obj.foo, false, obj);
         return foo().then(function(v) {
           assert(v === 42);
           assert(this === THIS);
@@ -288,7 +288,7 @@ describe("when using .bind", function() {
       });
       specify("on failure", function() {
         var obj = { foo: function(cb) { cb(this.bar); }, bar: 42 };
-        var foo = Promise.bind(THIS).constructor.promisify(obj.foo, obj);
+        var foo = Promise.bind(THIS).constructor.promisify(obj.foo, false, obj);
         return foo().then(assert.fail, function(v) {
           assert(v === 42);
           assert(this === THIS);

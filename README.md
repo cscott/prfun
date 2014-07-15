@@ -13,7 +13,8 @@ This package supplies them.  It also loads [es6-shim] for the basic
 `Promise` implementation, if there is not already a `Promise` implemention
 present.
 
-Portions of the API and test suite are borrowed from [bluebird] and [when].
+Portions of the API and test suite are borrowed from [bluebird], [when],
+and [q].
 
 ## Usage
 
@@ -304,7 +305,7 @@ For example: Read given files sequentially while summing their
 contents as an integer. Each file contains just the text `10`.
 
 ```js
-var readFileAsync = Promise.promisify(fs.readFile, fs);
+var readFileAsync = Promise.promisify(fs.readFile, false, fs);
 Promise.reduce(["file1.txt", "file2.txt", "file3.txt"], function(total, fileName) {
     return readFileAsync(fileName, "utf8").then(function(contents) {
         return total + parseInt(contents, 10);
@@ -788,14 +789,14 @@ other techniques can be implemented on top of them.
 Example of using a predicate-based filter:
 
 ```js
-var request = Promise.promisify(require("request"));
+var request = Promise.promisify(require("request"), ['response', 'body']);
 
 function clientError(e) {
     return e.code >= 400 && e.code < 500;
 }
 
-request("http://www.google.com").then(function(contents){
-    console.log(contents);
+request("http://www.google.com").then(function(result) {
+    console.log(result.body);
 }).caught(clientError, function(e){
    //A client error like 400 Bad Request happened
 });
@@ -982,7 +983,8 @@ MyClass.prototype.method = Promise.method(function(input) {
 });
 ```
 
-See also [`Q.promised`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qpromisedfunc).
+See also [`Q.promised`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qpromisedfunc),
+[`when.lift`](https://github.com/cujojs/when/blob/master/docs/api.md#whenlift).
 
 <hr>
 
@@ -1031,18 +1033,27 @@ getDataFor("me", function(err, dataForMe) {
 
 <hr>
 
-#### `Promise.promisify(Function nodeFunction [, dynamic receiver])` → `Function`
-[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-receiver--function
+#### `Promise.promisify(Function nodeFunction [, dynamic pattern [, dynamic receiver]])` → `Function`
+[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-patern--dynamic-receiver--function
 
 Returns a function that will wrap the given `nodeFunction`. Instead of
 taking a callback, the returned function will return a promise whose
 fate is decided by the callback behavior of the given node
 function. The node function should conform to node.js convention of
 accepting a callback as last argument and calling that callback with
-error as the first argument and success value on the second argument.
+error as the first argument and success value(s) in the second and
+following arguments.
 
-If the `nodeFunction` calls its callback with multiple success values,
-the fulfillment value will be an array of them.
+If the `pattern` is `true`, the fulfillment value will be an array
+containing the callback arguments.
+
+If the `pattern` is not present or falsy, the fulfillment value will
+be the second value passed to the callback.  (This is useful in the
+common case where only a single value is provided to the callback.)
+
+If the `pattern` is an array of names, the fulfillment value will be
+an object with the callback arguments assigned to named fields in the
+order given by `pattern`.
 
 If you pass a `receiver`, the `nodeFunction` will be called as a
 method on the `receiver` (that is, `this` will be set to `receiver` when
@@ -1052,7 +1063,7 @@ Example of promisifying the asynchronous `readFile` of node.js `fs`-module:
 
 ```js
 var fs = require('fs');
-var readFile = Promise.promisify(fs.readFile, fs);
+var readFile = Promise.promisify(fs.readFile, false, fs);
 
 readFile("myfile.js", "utf8").then(function(contents){
     return eval(contents);
@@ -1071,8 +1082,8 @@ readFile("myfile.js", "utf8").then(function(contents){
 Use [`Promise#spread`] with APIs that have multiple success values:
 
 ```js
-var request = Promise.promisify(require('request'));
-request("http://www.google.com").spread(function(request, body) {
+var request = Promise.promisify(require('request'), true);
+request("http://www.google.com").spread(function(response, body) {
     console.log(body);
 }).catch(function(err) {
     console.error(err);
@@ -1082,6 +1093,7 @@ request("http://www.google.com").spread(function(request, body) {
 The above uses the [request](https://github.com/mikeal/request)
 library which has a callback signature of multiple success values.
 
+Since `prfun` version 0.2.0.
 <hr>
 
 ### Timers
