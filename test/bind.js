@@ -1,6 +1,9 @@
 "use strict";
 
 var assert = require("assert");
+// platform Promises don't properly implement ES6 subclasses, so
+// always use es6-shim here.
+require('es6-shim');
 require('../');
 
 var fulfilled = Promise.resolve.bind(Promise);
