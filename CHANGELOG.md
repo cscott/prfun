@@ -1,3 +1,7 @@
+# prfun 1.x.x (not yet released)
+
+* Added `Promise#tap`.
+
 # prfun 1.0.0 (2014-07-15)
 
 * Breaking change to `promisify` API: following the lead of

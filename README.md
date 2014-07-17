@@ -55,6 +55,7 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#call`]
     - [`Promise#get`]
     - [`Promise#return`]
+    - [`Promise#tap`]
     - [`Promise#throw`]
     - [`Promise.defer`]
     - [`Promise#done`]
@@ -607,6 +608,34 @@ function getData() {
 ```
 
 because `data` is `undefined` at the time `.return` is called.
+
+<hr>
+
+#### `Promise#tap(Function handler)` → `Promise`
+[`Promise#tap`]: #promisetapfunction-handler--promise
+
+Convenience method for:
+
+```js
+promise.then(function(value) {
+   return Promise.resolve(handler(value)).return(value);
+});
+```
+
+That is, it waits for the promise, then invokes the handler with the
+promised value.  It waits for any promise returned by the handler, then
+returns the original value.
+
+Common use case is to add logging to an existing promise chain:
+
+```js
+doSomething()
+    .then(...)
+    .then(...)
+    .tap(console.log)
+    .then(...)
+    .then(...)
+```
 
 <hr>
 
