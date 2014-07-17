@@ -50,6 +50,8 @@ var Promise = prfun( require('bluebird'/*etc*/) );
     - [`Promise#reduce`]
     - [`Promise.reduceRight`]
     - [`Promise#reduceRight`]
+    - [`Promise.some`]
+    - [`Promise#some`]
     - [`Promise#spread`]
 - [Utility](#utility)
     - [`Promise.bind`]
@@ -430,6 +432,43 @@ an `initialValue`.
 
 *The original array is not modified.*
 
+<hr>
+
+#### `Promise.some(Array<dynamic>|Iterable values, Number n)` → `Promise`
+[`Promise.some`]: #promisesomearraydynamiciterable-values-number-n--promise
+
+Given an array or iterable which contains promises (or a mix of
+promises and values) return a promise that is fulfilled with an array
+as soon as `n` promises in the array are fulfilled.  The values in the
+array are ordered according to the order their respective promises were
+fulfilled.  Rejects if any promises are rejected.
+
+This example pings 4 nameservers, and logs the fastest 2 on console:
+
+```js
+Promise.some([
+    ping("ns1.example.com"),
+    ping("ns2.example.com"),
+    ping("ns3.example.com"),
+    ping("ns4.example.com")
+], 2).spread(function(first, second) {
+    console.log(first, second);
+});
+```
+
+<hr>
+
+#### `Promise#some(Number n)` → `Promise`
+[`Promise#some`]: #promisesomenumber-n--promise
+
+Convenience method for:
+```js
+promise.then(function(value) {
+    return Promise.some(value, n);
+});
+```
+
+See [`Promise.some`].
 <hr>
 
 #### `Promise#spread([Function fulfilledHandler] [, Function rejectedHandler ])` → `Promise`

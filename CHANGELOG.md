@@ -1,4 +1,5 @@
 # prfun 1.x.x (not yet released)
+* Added `Promise#some`.
 
 # prfun 1.0.1 (2014-09-25)
 
