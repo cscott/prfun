@@ -1,6 +1,6 @@
 # prfun 1.x.x (not yet released)
 
-* Added `Promise#tap`.
+* Added `Promise#tap`, `Promise#filter`.
 
 # prfun 1.0.0 (2014-07-15)
 

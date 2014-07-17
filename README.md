@@ -37,6 +37,8 @@ var Promise = prfun( require('bluebird'/*etc*/) );
 - [Collections](#collections)
     - [`Promise.all`]
     - [`Promise#all`]
+    - [`Promise.filter`]
+    - [`Promise#filter`]
     - [`Promise.join`]
     - [`Promise.map`]
     - [`Promise#map`]
@@ -113,6 +115,53 @@ promise.then(function(value) {
 See [`Promise.all`].
 <hr>
 
+#### `Promise.filter(Array<dynamic>|Promise values, Function callback [, Object thisArg])` → `Promise`
+[`Promise.filter`]: #promisefilterarraydynamicpromise-values-function-callback--object-thisarg--promise
+
+Filters an array-like, or a promise of an array-like, using the provided
+`callback` function.
+
+Convenience method for:
+```js
+Promise.resolve(values).filter(callback, thisArg);
+```
+
+See [`Promise#filter`].
+<hr>
+
+#### `Promise#filter(Function callback [, Object thisArg])` → `Promise`
+[`Promise#filter`]: #promisefilterfunction-callback--object-thisarg--promise
+
+Call the given `callback` function once for each element in (a promise of)
+an array which contains a promises (or a mix of promises and values), and
+construct a new array of all the values for which the callback returns
+(a promise of) a true value.  The `callback` function has
+the signature `(item, index, array)` where `item` is the resolved
+value of the promise in the input array at `index`. If any promise in
+the input array is rejected the returned promise is rejected as well.
+
+If a `thisArg` parameter is provided, it will be passed to `callback`
+when invoked, for use as its `this` value.  Otherwise, the value
+`undefined` will be passed for use as its `this` value.
+
+Note that the callback is invoked on each element in the array as soon
+as possible; that is, as soon as the promise for each element is
+resolved the callback is invoked for that element, without waiting for
+other elements to be resolved.
+
+The behavior of `filter` matches
+[`Array.prototype.filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+as much as possible.  Note that this means that non-array objects are often
+accepted without error, and any object without a length field returns a
+zero-length array.  For example,
+`Array.prototype.filter.call(123, Object.toString)` returns `[]`.
+`Promise#filter` rejects with a `TypeError` if `Array.prototype.filter`
+would throw a `TypeError`.
+
+*The original array is not modified.*
+
+<hr>
+
 #### `Promise.join([dynamic value...])` → `Promise`
 [`Promise.join`]: #promisejoindynamic-value--promise
 
@@ -167,6 +216,11 @@ as if [`Promise.all`] were invoked on the result.
 If a `thisArg` parameter is provided, it will be passed to `mapper`
 when invoked, for use as its `this` value.  Otherwise, the value
 `undefined` will be passed for use as its `this` value.
+
+Note that the `mapper` function is invoked on each element in the
+array as soon as possible; that is, as soon as the promise for each
+element is resolved `mapper` is invoked for that element, without
+waiting for other elements to be resolved.
 
 The behavior of `map` matches
 [`Array.prototype.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
