@@ -1117,7 +1117,7 @@ getDataFor("me", function(err, dataForMe) {
 <hr>
 
 #### `Promise.promisify(Function nodeFunction [, dynamic pattern [, dynamic receiver]])` → `Function`
-[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-patern--dynamic-receiver--function
+[`Promise.promisify`]: #promisepromisifyfunction-nodefunction--dynamic-pattern--dynamic-receiver--function
 
 Returns a function that will wrap the given `nodeFunction`. Instead of
 taking a callback, the returned function will return a promise whose
