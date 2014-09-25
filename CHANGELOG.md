@@ -1,4 +1,4 @@
-# prfun 1.x.x (not yet released)
+# prfun 1.0.1 (2014-09-25)
 
 * Added `Promise#tap`, `Promise#filter`.
 * Bug fix to `promisify` with named arguments (an array of names as
