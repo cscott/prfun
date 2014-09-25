@@ -62,9 +62,11 @@ var errbacksStringsAsync = Promise.promisify(function(cb){
 var error = Promise.promisify(erroneousNode);
 var success = Promise.promisify(successNode);
 var successMulti = Promise.promisify(successNodeMultipleValues, true);
+var successMulti2 = Promise.promisify(successNodeMultipleValues, ['a','b','c','d']);
 var syncError = Promise.promisify(syncErroneousNode);
 var syncSuccess = Promise.promisify(syncSuccessNode);
 var syncSuccessMulti = Promise.promisify(syncSuccessNodeMultipleValues, true);
+var syncSuccessMulti2 = Promise.promisify(syncSuccessNodeMultipleValues, ['a','b','c','d']);
 
 describe("when calling promisified function it should ", function(){
 
@@ -74,15 +76,17 @@ describe("when calling promisified function it should ", function(){
     var a = error(1,2,3);
     var b = success(1,2,3);
     var c = successMulti(1,2,3);
+    var d = successMulti2(1,2,3);
 
     a['finally'](function(){ pending=false; });
     b['finally'](function(){ pending=false; });
     c['finally'](function(){ pending=false; });
+    d['finally'](function(){ pending=false; });
 
     assert.equal(pending, true);
 
     return a.then(assert.fail, function() { /* caught */ })
-      .return(b).return(c).return();
+      .return(b).return(c).return(d).return();
   });
 
   specify( "should use this if no receiver was given", function() {
@@ -103,12 +107,14 @@ describe("when calling promisified function it should ", function(){
     var a = error(1,2,3);
     var b = success(1,2,3);
     var c = successMulti(1,2,3);
+    var c2 = successMulti2(1,2,3);
     var d = syncError(1,2,3);
     var e = syncSuccess(1,2,3);
     var f = syncSuccessMulti(1,2,3);
+    var f2 = syncSuccessMulti2(1,2,3);
     var calls = 0;
     function donecall() {
-      if( (++calls) === 6 ) {
+      if( (++calls) === 8 ) {
         done();
       }
     }
@@ -120,9 +126,11 @@ describe("when calling promisified function it should ", function(){
       a.then(assert.fail, donecall);
       b.then(donecall, assert.fail);
       c.then(donecall, assert.fail);
+      c2.then(donecall, assert.fail);
       d.then(assert.fail, donecall);
       e.then(donecall, assert.fail);
       f.then(donecall, assert.fail);
+      f2.then(donecall, assert.fail);
     }, 20);
   });
 
@@ -155,8 +163,10 @@ describe("when calling promisified function it should ", function(){
   specify("fulfill with proper value(s)", function() {
     var a = success(1,2,3);
     var b = successMulti(1,2,3);
+    var b2 = successMulti2(1,2,3);
     var c = syncSuccess(1,2,3);
     var d = syncSuccessMulti(1,2,3);
+    var d2 = syncSuccessMulti2(1,2,3);
 
     return Promise.join(
 
@@ -168,12 +178,20 @@ describe("when calling promisified function it should ", function(){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
     }),
 
+    b2.then(function( val ){
+      assert.deepEqual( val, { a:sentinel, b:sentinel, c:sentinel, d:undefined } );
+    }),
+
     c.then(function( val ){
       assert.equal(val, sentinel);
     }),
 
     d.then(function( val ){
       assert.deepEqual( val, [sentinel, sentinel, sentinel] );
+    }),
+
+    d2.then(function( val ){
+      assert.deepEqual( val, { a:sentinel, b:sentinel, c:sentinel, d:undefined } );
     })
 
     );
