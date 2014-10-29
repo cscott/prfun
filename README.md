@@ -942,7 +942,24 @@ Now the animation is hidden but an exception or the actual return
 value will automatically skip the finally and propagate to further
 chainers. This is more in line with the synchronous `finally` keyword.
 
-`Promise#finally` works like [Q's finally method](https://github.com/kriskowal/q/wiki/API-Reference#wiki-promisefinallycallback).
+`Promise#finally` works like [Q's finally method](https://github.com/kriskowal/q/wiki/API-Reference#wiki-promisefinallycallback), unless `callback` returns a rejected promise.
+
+Note that the parallel with synchronous `finally` is not exact:
+```js
+// as expected:
+(function() { try { return 1; } finally { throw "2"; } })(); // throws "2"
+Promise.resolve(1).finally(function() { throw "2"; }); // rejects with "2"
+
+// but:
+(function() { try { return 1; } finally { return 2; } })(); // returns 2
+Promise.resolve(1).finally(function() { return 2; }); // resolves to '1'
+
+// compare:
+(function() { try { return 1; } finally { 2; } })(); // returns 1
+```
+
+This asymmetry is because the `Promise` API can't distinguish the `return`
+statement from an expression evaluating to a value.
 
 <hr>
 
