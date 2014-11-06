@@ -1,3 +1,5 @@
+# prfun x.x.x (not yet released)
+
 # prfun 1.0.2 (2014-11-06)
 
 * Fix potential resource leak in `Promise#timeout`.
