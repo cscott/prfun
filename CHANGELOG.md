@@ -1,5 +1,7 @@
 # prfun 1.x.x (not yet released)
 
+* Fix potential resource leak in `Promise#timeout`.
+
 # prfun 1.0.1 (2014-09-25)
 
 * Added `Promise#tap`, `Promise#filter`.
