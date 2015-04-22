@@ -9,7 +9,7 @@ The `Promise` implementation included in the [ES6] "harmony" Javascript
 specification is missing some of the useful utility functions that
 are common in popular packages like [bluebird], [when], and [q].
 
-This package supplies them.  It also loads [es6-shim] for the basic
+This package supplies them.  It optionally loads [es6-shim] for the basic
 `Promise` implementation, if there is not already a `Promise` implemention
 present.
 
