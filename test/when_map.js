@@ -1,4 +1,5 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 /*
   Based on When.js tests
 
@@ -26,7 +27,7 @@
   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 var when = Promise;
@@ -35,69 +36,69 @@ var reject = Promise.reject.bind(Promise);
 
 var delay = Promise.delay.bind(Promise);
 
-describe("when.map-test", function () {
+describe('when.map-test', function() {
 
   function mapper(val) {
     return val * 2;
   }
 
   function deferredMapper(val) {
-    return delay(mapper(val), Math.random()*10);
+    return delay(mapper(val), Math.random() * 10);
   }
 
-  specify("should map input values array", function() {
+  specify('should map input values array', function() {
     var input = [1, 2, 3];
     return when.map(input, mapper).then(
       function(results) {
-        assert.deepEqual(results, [2,4,6]);
+        assert.deepEqual(results, [2, 4, 6]);
       }
     );
   });
 
-  specify("should map input promises array", function() {
+  specify('should map input promises array', function() {
     var input = [resolved(1), resolved(2), resolved(3)];
     return when.map(input, mapper).then(
       function(results) {
-        assert.deepEqual(results, [2,4,6]);
+        assert.deepEqual(results, [2, 4, 6]);
       }
     );
   });
 
-  specify("should map mixed input array", function() {
+  specify('should map mixed input array', function() {
     var input = [1, resolved(2), 3];
     return when.map(input, mapper).then(
       function(results) {
-        assert.deepEqual(results, [2,4,6]);
+        assert.deepEqual(results, [2, 4, 6]);
       }
     );
   });
 
-  specify("should map input when mapper returns a promise", function() {
-    var input = [1,2,3];
+  specify('should map input when mapper returns a promise', function() {
+    var input = [1, 2, 3];
     return when.map(input, deferredMapper).then(
       function(results) {
-        assert.deepEqual(results, [2,4,6]);
+        assert.deepEqual(results, [2, 4, 6]);
       }
     );
   });
 
-  specify("should accept a promise for an array (1)", function() {
+  specify('should accept a promise for an array (1)', function() {
     return when.map(resolved([1, resolved(2), 3]), mapper).then(
       function(result) {
-        assert.deepEqual(result, [2,4,6]);
+        assert.deepEqual(result, [2, 4, 6]);
       }
     );
   });
 
-  specify("should accept a promise for an array (2)", function() {
+  specify('should accept a promise for an array (2)', function() {
     return resolved([1, resolved(2), 3]).map(mapper).then(
       function(result) {
-        assert.deepEqual(result, [2,4,6]);
+        assert.deepEqual(result, [2, 4, 6]);
       }
     );
   });
 
-  specify("should resolve to empty array when input promise does not resolve to an array (1)", function() {
+  specify('should resolve to empty array when input promise does not resolve to an array (1)', function() {
     return when.map(resolved(123), mapper).then(
       function(result) {
         assert.deepEqual(result, []);
@@ -105,7 +106,7 @@ describe("when.map-test", function () {
     );
   });
 
-  specify("should resolve to empty array when input promise does not resolve to an array (2)", function() {
+  specify('should resolve to empty array when input promise does not resolve to an array (2)', function() {
     return resolved(123).map(mapper).then(
       function(result) {
         assert.deepEqual(result, []);
@@ -113,21 +114,21 @@ describe("when.map-test", function () {
     );
   });
 
-  specify("should map input promises when mapper returns a promise", function() {
-    var input = [resolved(1),resolved(2),resolved(3)];
+  specify('should map input promises when mapper returns a promise', function() {
+    var input = [resolved(1), resolved(2), resolved(3)];
     return when.map(input, mapper).then(
       function(results) {
-        assert.deepEqual(results, [2,4,6]);
+        assert.deepEqual(results, [2, 4, 6]);
       }
     );
   });
 
-  specify("should reject when input contains rejection", function() {
+  specify('should reject when input contains rejection', function() {
     var input = [resolved(1), reject(2), resolved(3)];
     return when.map(input, mapper).then(
       function() { throw new Error('should not reach here'); },
       function(result) {
-        assert( result === 2 );
+        assert(result === 2);
       }
     );
   });

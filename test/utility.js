@@ -1,13 +1,14 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 describe('Promise#call', function() {
   it('should call when given an object', function() {
     return Promise.resolve({
       test: function() { return Promise.resolve(this.foo); },
-      foo: 42
+      foo: 42,
     }).call('test').then(function(v) {
       assert.deepEqual(v, 42);
     });
@@ -15,10 +16,10 @@ describe('Promise#call', function() {
 
   it('should call with arguments when given an object', function() {
     return Promise.resolve({
-      test: function(x, y) { return Promise.resolve(x + 2*y + this.foo); },
-      foo: 42
+      test: function(x, y) { return Promise.resolve(x + 2 * y + this.foo); },
+      foo: 42,
     }).call('test', 3, Promise.resolve(7)).then(function(v) {
-      assert.deepEqual(v, 3 + 2*7 + 42);
+      assert.deepEqual(v, 3 + 2 * 7 + 42);
     });
   });
 
@@ -44,7 +45,7 @@ describe('Promise#call', function() {
 describe('Promise#get', function() {
   it('should fetch when given an object', function() {
     return Promise.resolve({
-      test: 42
+      test: 42,
     }).get('test').then(function(v) {
       assert.deepEqual(v, 42);
     });
@@ -52,7 +53,7 @@ describe('Promise#get', function() {
 
   it('should resolve when given an object with a promise', function() {
     return Promise.resolve({
-      test: Promise.resolve(42)
+      test: Promise.resolve(42),
     }).get('test').then(function(v) {
       assert.deepEqual(v, 42);
     });

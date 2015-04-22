@@ -1,4 +1,5 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 /*
   Based on When.js tests
 
@@ -26,16 +27,16 @@
   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-describe("when.all-test", function () {
+describe('when.all-test', function() {
 
-  specify("should resolve empty input", function() {
+  specify('should resolve empty input', function() {
     return when.all([]).then(
       function(result) {
         assert.deepEqual(result, []);
@@ -43,7 +44,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve promise of empty input", function() {
+  specify('should resolve promise of empty input', function() {
     return resolved([]).all().then(
       function(result) {
         assert.deepEqual(result, []);
@@ -51,7 +52,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve values array", function() {
+  specify('should resolve values array', function() {
     var input = [1, 2, 3];
     return when.all(input).then(
       function(results) {
@@ -60,7 +61,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve promise of values array", function() {
+  specify('should resolve promise of values array', function() {
     var input = [1, 2, 3];
     return resolved(input).all().then(
       function(results) {
@@ -69,7 +70,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve promises array", function() {
+  specify('should resolve promises array', function() {
     var input = [resolved(1), resolved(2), resolved(3)];
     return when.all(input).then(
       function(results) {
@@ -78,7 +79,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve promise of promises array", function() {
+  specify('should resolve promise of promises array', function() {
     var input = [resolved(1), resolved(2), resolved(3)];
     return resolved(input).all().then(
       function(results) {
@@ -87,7 +88,8 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve sparse array input", function() {
+  specify('should resolve sparse array input', function() {
+    /* jshint elision: true */
     var input = [, 1, , 1, 1 ];
     return when.all(input).then(
       function(results) {
@@ -96,7 +98,8 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should resolve promise of sparse array input", function() {
+  specify('should resolve promise of sparse array input', function() {
+    /* jshint elision: true */
     var input = [, 1, , 1, 1 ];
     return resolved(input).all().then(
       function(results) {
@@ -105,7 +108,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should reject if any input promise rejects", function() {
+  specify('should reject if any input promise rejects', function() {
     var input = [resolved(1), rejected(2), resolved(3)];
     return when.all(input).then(
       function() { throw new Error('should not reach here'); },
@@ -115,7 +118,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should reject if any input promise rejects (2)", function() {
+  specify('should reject if any input promise rejects (2)', function() {
     var input = [resolved(1), rejected(2), resolved(3)];
     return resolved(input).all().then(
       function() { throw new Error('should not reach here'); },
@@ -125,7 +128,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should reject if any input promise rejects (3)", function() {
+  specify('should reject if any input promise rejects (3)', function() {
     var input = [resolved(1), resolved(2), resolved(3)];
     return rejected(input).all().then(
       function() { throw new Error('should not reach here'); },
@@ -135,7 +138,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should accept a promise for an array", function() {
+  specify('should accept a promise for an array', function() {
     var expected, input;
 
     expected = [1, 2, 3];
@@ -148,7 +151,7 @@ describe("when.all-test", function () {
     );
   });
 
-  specify("should reject when input promise does not resolve to array", function() {
+  specify('should reject when input promise does not resolve to array', function() {
     var caught = false;
     return when.all(resolved(1)).caught(TypeError, function(e) {
       caught = true;

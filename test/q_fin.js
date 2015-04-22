@@ -1,6 +1,7 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 /*!
@@ -25,220 +26,220 @@ var Promise = require('../');
  IN THE SOFTWARE.
 */
 
-describe("Promise#finally", function () {
+describe('Promise#finally', function() {
 
-  var exception1 = new Error("boo!");
-  var exception2 = new TypeError("evil!");
+  var exception1 = new Error('boo!');
+  var exception2 = new TypeError('evil!');
 
-  describe("when nothing is passed", function() {
-    it("should do nothing", function() {
-      return Promise.resolve("foo")
+  describe('when nothing is passed', function() {
+    it('should do nothing', function() {
+      return Promise.resolve('foo')
         ['finally']()
         ['finally']()
         ['finally']()
         ['finally']()
-        .then(function(val){
-          assert(val === "foo");
+        .then(function(val) {
+          assert(val === 'foo');
         });
     });
   });
 
-  describe("when the promise is fulfilled", function () {
+  describe('when the promise is fulfilled', function() {
 
-    it("should call the callback", function () {
+    it('should call the callback', function() {
       var called = false;
 
-      return Promise.resolve("foo")
-        ['finally'](function () {
+      return Promise.resolve('foo')
+        ['finally'](function() {
           called = true;
         })
-        .then(function () {
-          assert.equal(called,true);
+        .then(function() {
+          assert.equal(called, true);
         });
     });
 
-    it("should fulfill with the original value", function () {
-      return Promise.resolve("foo")
-        ['finally'](function () {
-          return "bar";
+    it('should fulfill with the original value', function() {
+      return Promise.resolve('foo')
+        ['finally'](function() {
+          return 'bar';
         })
-        .then(function (result) {
-          assert.equal(result,"foo");
+        .then(function(result) {
+          assert.equal(result, 'foo');
         });
     });
 
-    describe("when the callback returns a promise", function () {
+    describe('when the callback returns a promise', function() {
 
-      describe("that is fulfilled", function () {
-        it("should fulfill with the original reason after that promise resolves", function () {
+      describe('that is fulfilled', function() {
+        it('should fulfill with the original reason after that promise resolves', function() {
           var pending = true;
           var promise = Promise.delay(null, 25).then(function() {
             pending = false;
           });
 
-          return Promise.resolve("foo")
-            ['finally'](function () {
+          return Promise.resolve('foo')
+            ['finally'](function() {
               return promise;
             })
-            .then(function (result) {
+            .then(function(result) {
               assert.equal(pending, false);
-              assert.equal(result, "foo");
+              assert.equal(result, 'foo');
             });
         });
       });
 
-      describe("that is rejected", function () {
-        it("should reject with this new rejection reason", function () {
-          return Promise.resolve("foo")
-            ['finally'](function () {
+      describe('that is rejected', function() {
+        it('should reject with this new rejection reason', function() {
+          return Promise.resolve('foo')
+            ['finally'](function() {
               return Promise.reject(exception1);
             })
-            .then(function () {
+            .then(function() {
               assert.fail();
-            }, function (exception) {
-              assert.equal(exception,exception1);
+            }, function(exception) {
+              assert.equal(exception, exception1);
             });
         });
       });
 
     });
 
-    describe("when the callback throws an exception", function () {
-      it("should reject with this new exception", function () {
-        return Promise.resolve("foo")
-          ['finally'](function () {
+    describe('when the callback throws an exception', function() {
+      it('should reject with this new exception', function() {
+        return Promise.resolve('foo')
+          ['finally'](function() {
             throw exception1;
           })
-          .then(function () {
+          .then(function() {
             assert.fail();
-          }, function (exception) {
-            assert.equal(exception,exception1);
+          }, function(exception) {
+            assert.equal(exception, exception1);
           });
       });
     });
 
   });
 
-  describe("when the promise is rejected", function () {
+  describe('when the promise is rejected', function() {
 
-    it("should call the callback", function () {
+    it('should call the callback', function() {
       var called = false;
 
       return Promise.reject(exception1)
-        ['finally'](function () {
+        ['finally'](function() {
           called = true;
         })
-        .then(function () {
+        .then(function() {
           assert.fail();
-        }, function () {
-          assert.equal(called,true);
+        }, function() {
+          assert.equal(called, true);
         });
     });
 
-    it("should reject with the original reason", function () {
+    it('should reject with the original reason', function() {
       return Promise.reject(exception1)
-        ['finally'](function () {
-          return "bar";
+        ['finally'](function() {
+          return 'bar';
         })
-        .then(function () {
+        .then(function() {
           assert.fail();
-        }, function (exception) {
-          assert.equal(exception,exception1);
+        }, function(exception) {
+          assert.equal(exception, exception1);
         });
     });
 
-    describe("when the callback returns a promise", function () {
+    describe('when the callback returns a promise', function() {
 
-      describe("that is fulfilled", function () {
-        it("should reject with the original reason after that promise resolves", function () {
+      describe('that is fulfilled', function() {
+        it('should reject with the original reason after that promise resolves', function() {
           var pending = true;
           var promise = Promise.delay(null, 25).then(function() {
             pending = false;
           });
 
           return Promise.reject(exception1)
-            ['finally'](function () {
+            ['finally'](function() {
               return promise;
-            }).then(function () {
+            }).then(function() {
               assert.fail();
-            }, function (exception) {
+            }, function(exception) {
               assert.equal(pending, false);
               assert.equal(exception, exception1);
             });
         });
       });
 
-      describe("that is rejected", function () {
-        it("should reject with the new reason", function () {
+      describe('that is rejected', function() {
+        it('should reject with the new reason', function() {
           return Promise.reject(exception1)
-            ['finally'](function () {
+            ['finally'](function() {
               return Promise.reject(exception2);
-            }).then(function () {
+            }).then(function() {
               assert.fail();
-            }, function (exception) {
-              assert.equal(exception,exception2);
+            }, function(exception) {
+              assert.equal(exception, exception2);
             });
         });
       });
     });
 
-    describe("when the callback throws an exception", function () {
-      it("should reject with this new exception", function () {
+    describe('when the callback throws an exception', function() {
+      it('should reject with this new exception', function() {
         return Promise.reject(exception1)
-          ['finally'](function () {
+          ['finally'](function() {
             throw exception2;
           })
-          .then(function () {
+          .then(function() {
             assert.fail();
-          }, function (exception) {
-            assert.equal(exception,exception2);
+          }, function(exception) {
+            assert.equal(exception, exception2);
           });
       });
     });
   });
 
-  describe("when the callback returns a thenable", function () {
+  describe('when the callback returns a thenable', function() {
 
-    describe("that will fulfill", function () {
-      it("should reject with the original reason after that", function () {
+    describe('that will fulfill', function() {
+      it('should reject with the original reason after that', function() {
         var promise = {
           then: function(fn) {
-            setTimeout(function(){
+            setTimeout(function() {
               fn(15);
             }, 13);
-          }
+          },
         };
 
         return Promise.reject(exception1)
-          ['finally'](function () {
+          ['finally'](function() {
             return promise;
           })
-          .then(function () {
+          .then(function() {
             assert.fail();
-          }, function (exception) {
-            assert.equal(exception,exception1);
+          }, function(exception) {
+            assert.equal(exception, exception1);
           });
       });
     });
 
-    describe("that is rejected", function () {
-      it("should reject with the new reason", function () {
+    describe('that is rejected', function() {
+      it('should reject with the new reason', function() {
         var promise = {
           then: function(f, fn) {
-            setTimeout(function(){
+            setTimeout(function() {
               fn(exception2);
             }, 13);
-          }
+          },
         };
 
         return Promise.reject(exception1)
-          ['finally'](function () {
+          ['finally'](function() {
             return promise;
           })
-          .then(function () {
+          .then(function() {
             assert.fail();
-          }, function (exception) {
-            assert.equal(exception,exception2);
+          }, function(exception) {
+            assert.equal(exception, exception2);
           });
       });
     });

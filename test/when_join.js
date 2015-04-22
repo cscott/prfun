@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
   Based on When.js tests
 
@@ -26,16 +26,16 @@
   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 
-describe("when.join-test", function () {
+describe('when.join-test', function() {
 
-  specify("should resolve empty input", function() {
+  specify('should resolve empty input', function() {
     return when.join().then(
       function(result) {
         assert.deepEqual(result, []);
@@ -43,7 +43,7 @@ describe("when.join-test", function () {
     );
   });
 
-  specify("should join values", function() {
+  specify('should join values', function() {
     return when.join(1, 2, 3).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
@@ -51,7 +51,7 @@ describe("when.join-test", function () {
     );
   });
 
-  specify("should join promises array", function() {
+  specify('should join promises array', function() {
     return when.join(resolved(1), resolved(2), resolved(3)).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3]);
@@ -59,7 +59,7 @@ describe("when.join-test", function () {
     );
   });
 
-  specify("should join mixed array", function() {
+  specify('should join mixed array', function() {
     return when.join(resolved(1), 2, resolved(3), 4).then(
       function(results) {
         assert.deepEqual(results, [1, 2, 3, 4]);
@@ -67,7 +67,7 @@ describe("when.join-test", function () {
     );
   });
 
-  specify("should reject if any input promise rejects", function() {
+  specify('should reject if any input promise rejects', function() {
     return when.join(resolved(1), rejected(2), resolved(3)).then(
       function() { throw new Error('should not reach here'); },
       function(failed) {

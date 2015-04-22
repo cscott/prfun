@@ -1,0 +1,11 @@
+{
+  "preset": "node-style-guide",
+  // allow some slop to account for legacy code
+  "validateQuoteMarks": { "mark": "'", "escape": true },
+  "requireCapitalizedComments": { "allExcept": ["jshint"] },
+
+  "excludeFiles": [
+    "node_modules/**",
+    "clean/**"
+  ]
+}

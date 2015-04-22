@@ -26,14 +26,14 @@ var onlypromises = function(f) {
         assert(arguments.length === 1);
         var result = cb(done);
         assert.ok(!result,
-                  "Tests with callbacks should not return a value: "+title);
+                  'Tests with callbacks should not return a value: ' + title);
       };
     } else if (cb.length === 0) {
       cb2 = function() {
         assert(arguments.length === 0);
         var result = cb();
         assert.ok(result && typeof result.then === 'function',
-                  "Synchronous tests should return a promise: "+title);
+                  'Synchronous tests should return a promise: ' + title);
         return result;
       };
     } else {
@@ -49,11 +49,11 @@ var onlypromises = function(f) {
 var realSpecify = onlypromises(global.specify);
 Object.defineProperty(global, 'specify', {
   get: function() { return realSpecify; },
-  set: function(v) { realSpecify = onlypromises(v); }
+  set: function(v) { realSpecify = onlypromises(v); },
 });
 
 var realIt = onlypromises(global.it);
 Object.defineProperty(global, 'it', {
   get: function() { return realIt; },
-  set: function(v) { realIt = onlypromises(v); }
+  set: function(v) { realIt = onlypromises(v); },
 });

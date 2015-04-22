@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 var fulfilled = Promise.resolve.bind(Promise);
@@ -25,10 +25,10 @@ var receiver = function() {
   return this;
 };
 
-var tryy = Promise["try"].bind(Promise);
+var tryy = Promise['try'].bind(Promise);
 
-describe("Promise.try", function(){
-  specify("should reject when the function throws", function() {
+describe('Promise.try', function() {
+  specify('should reject when the function throws', function() {
     var async = false;
     var p = tryy(thrower).then(assert.fail, function(e) {
       assert(async);
@@ -37,7 +37,7 @@ describe("Promise.try", function(){
     async = true;
     return p;
   });
-  specify("should reject when the function is not a function", function() {
+  specify('should reject when the function is not a function', function() {
     var async = false;
     var p = tryy(null).then(assert.fail, function(e) {
       assert(async);
@@ -46,7 +46,7 @@ describe("Promise.try", function(){
     async = true;
     return p;
   });
-  specify("should call the function with the given receiver", function() {
+  specify('should call the function with the given receiver', function() {
     var async = false;
     var p = tryy(receiver, obj).then(function(val) {
       assert(async);
@@ -55,7 +55,7 @@ describe("Promise.try", function(){
     async = true;
     return p;
   });
-  specify("should call the function with the given value", function() {
+  specify('should call the function with the given value', function() {
     var async = false;
     var p = tryy(identity, null, obj).then(function(val) {
       assert(async);
@@ -64,17 +64,17 @@ describe("Promise.try", function(){
     async = true;
     return p;
   });
-  specify("should call the function with the given values", function() {
+  specify('should call the function with the given values', function() {
     var async = false;
     var p = tryy(array, null, 1, 2, 3).then(function(val) {
       assert(async);
-      assert.deepEqual(val, [1,2,3]);
+      assert.deepEqual(val, [1, 2, 3]);
     });
     async = true;
     return p;
   });
 
-  specify("should unwrap this and arguments", function() {
+  specify('should unwrap this and arguments', function() {
     var d = pending();
     var THIS = {};
     var p = tryy(function(v) {
@@ -83,37 +83,37 @@ describe("Promise.try", function(){
     }, d.promise, fulfilled(42)
     );
 
-    setTimeout(function(){
+    setTimeout(function() {
       d.resolve(THIS);
     }, 10);
 
     return p;
   });
 
-  specify("should unwrap returned promise", function() {
+  specify('should unwrap returned promise', function() {
     var d = pending();
 
-    var p = tryy(function(){
+    var p = tryy(function() {
       return d.promise;
-    }).then(function(v){
+    }).then(function(v) {
       assert(v === 3);
     });
 
-    setTimeout(function(){
+    setTimeout(function() {
       d.resolve(3);
     }, 13);
 
     return p;
   });
-  specify("should unwrap returned thenable", function() {
+  specify('should unwrap returned thenable', function() {
 
-    return tryy(function(){
+    return tryy(function() {
       return {
         then: function(f, v) {
           f(3);
-        }
+        },
       };
-    }).then(function(v){
+    }).then(function(v) {
       assert(v === 3);
     });
   });

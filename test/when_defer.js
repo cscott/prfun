@@ -1,4 +1,5 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 /*
   Based on When.js tests
 
@@ -26,7 +27,7 @@
   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 var when = Promise;
@@ -38,19 +39,19 @@ var other = {};
 
 var refute = {
   defined: function(val) {
-    assert( typeof val === "undefined" );
+    assert(typeof val === 'undefined');
   },
 
-  equals: function( a, b ) {
-    assert.notDeepEqual( a, b );
-  }
+  equals: function(a, b) {
+    assert.notDeepEqual(a, b);
+  },
 };
 
 function fakeResolved(val) {
   return {
     then: function(callback) {
       return fakeResolved(callback ? callback(val) : val);
-    }
+    },
   };
 }
 
@@ -58,14 +59,14 @@ function fakeRejected(reason) {
   return {
     then: function(callback, errback) {
       return errback ? fakeResolved(errback(reason)) : fakeRejected(reason);
-    }
+    },
   };
 }
 
-describe("Promise.defer", function () {
+describe('Promise.defer', function() {
 
 
-  specify("should fulfill with an immediate value", function() {
+  specify('should fulfill with an immediate value', function() {
     var d = when.defer();
 
     var p = d.promise.then(
@@ -79,7 +80,7 @@ describe("Promise.defer", function () {
     return p;
   });
 
-  specify("should fulfill with fulfilled promised", function() {
+  specify('should fulfill with fulfilled promised', function() {
     var d = when.defer();
 
     var p = d.promise.then(
@@ -93,7 +94,7 @@ describe("Promise.defer", function () {
     return p;
   });
 
-  specify("should reject with rejected promise", function() {
+  specify('should reject with rejected promise', function() {
     var d = when.defer();
 
     var p = d.promise.then(
@@ -108,7 +109,7 @@ describe("Promise.defer", function () {
     return p;
   });
 
-  specify("should return a promise for the resolution value", function() {
+  specify('should return a promise for the resolution value', function() {
     var d = when.defer();
 
     d.resolve(sentinel);
@@ -119,7 +120,7 @@ describe("Promise.defer", function () {
     );
   });
 
-  specify("should return a promise for a promised resolution value", function() {
+  specify('should return a promise for a promised resolution value', function() {
     var d = when.defer();
 
     d.resolve(when.resolve(sentinel));
@@ -130,7 +131,7 @@ describe("Promise.defer", function () {
     );
   });
 
-  specify("should return a promise for a promised rejection value", function() {
+  specify('should return a promise for a promised rejection value', function() {
     var d = when.defer();
 
     // Both the returned promise, and the deferred's own promise should
@@ -144,7 +145,7 @@ describe("Promise.defer", function () {
     );
   });
 
-  specify("should invoke newly added callback when already resolved", function() {
+  specify('should invoke newly added callback when already resolved', function() {
     var d = when.defer();
 
     d.resolve(sentinel);
@@ -158,7 +159,7 @@ describe("Promise.defer", function () {
 
 
 
-  specify("should reject with an immediate value", function() {
+  specify('should reject with an immediate value', function() {
     var d = when.defer();
 
     var p = d.promise.then(
@@ -173,7 +174,7 @@ describe("Promise.defer", function () {
     return p;
   });
 
-  specify("should reject with fulfilled promised", function() {
+  specify('should reject with fulfilled promised', function() {
     var d, expected;
 
     d = when.defer();
@@ -191,7 +192,7 @@ describe("Promise.defer", function () {
     return p;
   });
 
-  specify("should reject with rejected promise", function() {
+  specify('should reject with rejected promise', function() {
     var d, expected;
 
     d = when.defer();
@@ -210,7 +211,7 @@ describe("Promise.defer", function () {
   });
 
 
-  specify("should return a promise for the rejection value", function() {
+  specify('should return a promise for the rejection value', function() {
     var d = when.defer();
 
     // Both the returned promise, and the deferred's own promise should
@@ -224,14 +225,14 @@ describe("Promise.defer", function () {
     );
   });
 
-  specify("should invoke newly added errback when already rejected", function() {
+  specify('should invoke newly added errback when already rejected', function() {
     var d = when.defer();
 
     d.reject(sentinel);
 
     return d.promise.then(
       assert.fail,
-      function (val) {
+      function(val) {
         assert.deepEqual(val, sentinel);
       }
     );

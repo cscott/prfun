@@ -1,4 +1,5 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 
 var assert = require('assert');
 var Promise = require('../');
@@ -8,7 +9,7 @@ var other = {};
 
 function noop() {}
 
-var mkspy= function(calls) {
+var mkspy = function(calls) {
   return function spy() {
     var args = Array.prototype.slice.call(arguments);
     args.unshift(this);
@@ -16,16 +17,18 @@ var mkspy= function(calls) {
   };
 };
 
-describe('Promise.guard', function () {
+describe('Promise.guard', function() {
 
   it('should return a function', function() {
     assert.equal(typeof Promise.guard(), 'function');
-    // return a promise from all synchronous tests, for consistency
+    // Return a promise from all synchronous tests, for consistency
     return Promise.resolve();
   });
 
   it('should invoke condition', function() {
-    var condition, guarded, called = 0;
+    var condition;
+    var guarded;
+    var called = 0;
 
     condition = function() { called++; };
 
@@ -35,7 +38,7 @@ describe('Promise.guard', function () {
 
     assert.equal(called, 1);
 
-    // return a promise from all synchronous tests, for consistency
+    // Return a promise from all synchronous tests, for consistency
     return Promise.resolve();
   });
 
@@ -150,6 +153,6 @@ describe('Promise.guard', function () {
       var p3 = third.then(function() { value = other; });
 
       return Promise.join(p1, p2, p3);
-      });
+    });
   });
 });

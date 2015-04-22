@@ -4,7 +4,7 @@
   "description": "Helper functions for ES6 promises",
   "main": "index.js",
   "scripts": {
-    "test": "jshint . && mocha --harmony-generators"
+    "test": "jshint . && jscs . && mocha --harmony-generators"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/cscott/prfun",
   "devDependencies": {
-    "mocha": "~1.18.2",
-    "jshint": "~2.4.3",
-    "glob": "~3.2.3",
-    "es6-shim": ">=0.10.0 <1.0.0-0"
+    "es6-shim": ">=0.10.0 <1.0.0-0",
+    "jscs": "~1.12.0",
+    "jshint": "~2.6.3",
+    "mocha": "~1.18.2"
   },
   "optionalDependencies": {
     "es6-shim": ">=0.10.0 <1.0.0-0"

@@ -1,6 +1,7 @@
-"use strict";
+// jscs:disable maximumLineLength
+'use strict';
 
-var assert = require("assert");
+var assert = require('assert');
 var Promise = require('../');
 
 /*
@@ -24,8 +25,8 @@ var Promise = require('../');
   IN THE SOFTWARE.
 */
 
-describe("Promise#nodify", function () {
-  var mkspy= function(calls) {
+describe('Promise#nodify', function() {
+  var mkspy = function(calls) {
     return function spy() {
       var args = Array.prototype.slice.call(arguments);
       args.unshift(this);
@@ -33,7 +34,7 @@ describe("Promise#nodify", function () {
     };
   };
 
-  it("calls back with a resolution", function () {
+  it('calls back with a resolution', function() {
     var calls = [];
     var spy = mkspy(calls);
 
@@ -44,7 +45,7 @@ describe("Promise#nodify", function () {
     });
   });
 
-  it("calls back with an error", function () {
+  it('calls back with an error', function() {
     var calls = [];
     var spy = mkspy(calls);
 
@@ -55,8 +56,8 @@ describe("Promise#nodify", function () {
     });
   });
 
-  it("forwards a promise", function () {
-    return Promise.resolve(10).nodify().then(function (ten) {
+  it('forwards a promise', function() {
+    return Promise.resolve(10).nodify().then(function(ten) {
       assert.deepEqual(ten, 10);
     });
   });
@@ -64,14 +65,14 @@ describe("Promise#nodify", function () {
 });
 
 
-//Should be the last test because it is ridiculously hard to test
-//if something throws in the node process
+// Should be the last test because it is ridiculously hard to test
+// if something throws in the node process
 
-var isNodeJS = typeof process !== "undefined" &&
-  typeof process.execPath === "string";
+var isNodeJS = typeof process !== 'undefined' &&
+  typeof process.execPath === 'string';
 
-if( isNodeJS ) {
-  describe("nodify", function () {
+if (isNodeJS) {
+  describe('nodify', function() {
 
     var h = [];
 
@@ -79,7 +80,7 @@ if( isNodeJS ) {
       var originalException;
       while (true) {
         originalException = process.listeners('uncaughtException').pop();
-        if (!originalException) break;
+        if (!originalException) { break; }
         process.removeListener('uncaughtException', originalException);
         h.push(originalException);
       }
@@ -87,15 +88,15 @@ if( isNodeJS ) {
 
     function clearHandlersNoRestore() {
       var originalException;
-      while(true) {
+      while (true) {
         originalException = process.listeners('uncaughtException').pop();
-        if (!originalException) break;
+        if (!originalException) { break; }
         process.removeListener('uncaughtException', originalException);
       }
     }
 
     function addHandlersBack() {
-      for( var i = 0, len = h.length; i < len; ++i ) {
+      for (var i = 0, len = h.length; i < len; ++i) {
         process.addListener('uncaughtException', h[i]);
       }
     }
@@ -104,18 +105,18 @@ if( isNodeJS ) {
       throw e;
     }
 
-    it("throws normally in the node process if the function throws", function (done) {
+    it('throws normally in the node process if the function throws', function(done) {
       clearHandlers();
       var promise = Promise.resolve(10);
       var turns = 0;
-      process.nextTick(function(){
+      process.nextTick(function() {
         turns++;
       });
       promise.nodify(thrower);
-      process.addListener("uncaughtException", function(err) {
+      process.addListener('uncaughtException', function(err) {
         clearHandlersNoRestore();
-        assert( err === e );
-        assert( turns === 1);
+        assert(err === e);
+        assert(turns === 1);
         done();
       });
     });
