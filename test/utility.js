@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert");
-require('../');
+var Promise = require('../');
 
 describe('Promise#call', function() {
   it('should call when given an object', function() {

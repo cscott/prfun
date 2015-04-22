@@ -25,7 +25,8 @@
   "devDependencies": {
     "mocha": "~1.18.2",
     "jshint": "~2.4.3",
-    "glob": "~3.2.3"
+    "glob": "~3.2.3",
+    "es6-shim": ">=0.10.0 <1.0.0-0"
   },
   "optionalDependencies": {
     "es6-shim": ">=0.10.0 <1.0.0-0"

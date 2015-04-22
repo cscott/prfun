@@ -6,7 +6,7 @@ var node11 = parseInt(process.versions.node.split(".")[1], 10) >= 11;
 if (!node11) { return; }
 
 var assert = require("assert");
-require('../');
+var Promise = require('../');
 
 function get(arg) {
   return {

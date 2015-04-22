@@ -13,6 +13,9 @@
 // This ensures we can't accidentally write no-op tests.
 
 var assert = require('assert');
+// always use es6-shim promises for tests, since platform Promises may
+// not properly implement ES6 subclasses
+require('es6-shim');
 
 // wrap specify/it and ensure that they always return a promise if synchronous.
 var onlypromises = function(f) {

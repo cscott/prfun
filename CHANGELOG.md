@@ -1,4 +1,10 @@
-# prfun x.x.x (not yet released)
+# prfun 2.x.x (not yet released)
+* Breaking change: `prfun` now creates a subclass of `Promise` by
+  default, instead of smashing the global `Promise`.  This only works
+  if your `Promise` implementation properly supports the ES6 subclass
+  semantics -- `es6-shim` is known to implement the ES6 spec properly.
+  To smash the global `Promise` like in the bad old days, use
+  `require('prfun/smash')`.
 
 # prfun 1.0.2 (2014-11-06)
 

@@ -18,19 +18,56 @@ and [q].
 
 ## Usage
 
-To use the promise implementation from your ES6 engine (or [es6-shim], if
-you are running on an ES5 engine):
+By default `prfun` creates a `Promise` subclass, using ES6 semantics.
+This means you use it like:
 ```
-require('prfun');
+var Promise = require('prfun'); // subclasses global.Promise
+// note that global.Promise !== Promise here
+```
+or
+```
+var SomeOtherPromise = require( /*something*/ );
+var Promise = require('prfun/wrap')( SomeOtherPromise );
+```
+Note that the `SomeOtherPromise` implementation must support `Promise`
+subclassing using ES6 semantics.  ([es6-shim]'s implementation is
+known to do so.)  We will call the subclass created by `prfun` a
+"`prfun` `Promise`".
 
-// Use Promise.reduce, etc...
+According to the ES6 `Promise` spec, all `Promise` methods (including
+the new ones added by `prfun`) will return an instance of the subclass
+when invoked on an instance of the subclass.  That is, if you are given
+a `prfun` `Promise` and you call `then` on it, the result will be
+another `prfun` `Promise`.  So within your own code you can assume
+that all `prfun` helper methods will be present, and they will all
+return `prfun` `Promise`s which also contain all the `prfun` helper
+methods.
+
+If your code is given a promise from an outside API, and you can't
+guarantee that it is a `prfun` Promise, then you can use
+`Promise.resolve` in order to cast the outside promise to a `prfun`
+`Promise`.   For example:
+```
+var Promise = require('prfun'); // this is a "prfun Promise"
+
+function myApi(externalPromise) {
+  return Promise.resolve(externalPromise).tap(function(value) {
+    // we can call 'tap' after resolving the external promise
+  }); // this result will also be a "prfun Promise"
+}
 ```
 
-To use a different promise implementation:
+In order to *modify the global `Promise` object* (instead of
+subclassing), use:
 ```
-var prfun = require('prfun/wrap');
-var Promise = prfun( require('bluebird'/*etc*/) );
+require('prfun/smash');
+// global.Promise.reduce, global.Promise.tap, etc, now exist.
 ```
+This is how `prfun` worked by default prior to version 2.0, but it
+it not recommended: stomping on global objects is never a good idea,
+and future changes to the `Promise` object in ES7 or incompatible
+methods added by your third-party `Promise` implementation or other
+libraries could break your code in mysterious ways.
 
 ## API
 
@@ -1394,7 +1431,7 @@ See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasy
 
 ## License
 
-Copyright (c) 2014 C. Scott Ananian
+Copyright (c) 2014-2015 C. Scott Ananian
 
 Portions are Copyright (c) 2014 Petka Antonov
 

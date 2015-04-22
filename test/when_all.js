@@ -27,7 +27,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
 var assert = require("assert");
-require('../');
+var Promise = require('../');
 
 var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
