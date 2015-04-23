@@ -1,4 +1,4 @@
-# prfun 2.x.x (not yet released)
+# prfun 2.0.0 (2015-04-23)
 * Breaking change: `prfun` now creates a subclass of `Promise` by
   default, instead of smashing the global `Promise`.  This only works
   if your `Promise` implementation properly supports the ES6 subclass
