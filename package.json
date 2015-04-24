@@ -4,7 +4,8 @@
   "description": "Helper functions for ES6 promises",
   "main": "index.js",
   "scripts": {
-    "test": "jshint . && jscs . && mocha --harmony-generators"
+    "mocha": "if which iojs ; then mocha ; else mocha --harmony-generators; fi",
+    "test": "jshint . && jscs . && npm run mocha"
   },
   "repository": {
     "type": "git",
