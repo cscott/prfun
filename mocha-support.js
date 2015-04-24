@@ -13,9 +13,13 @@
 // This ensures we can't accidentally write no-op tests.
 
 var assert = require('assert');
-// always use es6-shim promises for tests, since platform Promises may
+// always use core-js promises for tests, since platform Promises may
 // not properly implement ES6 subclasses
-require('es6-shim');
+delete global.Promise;
+// Loading promises as a library is broken in core-js 0.9.0; it is fixed
+// by zloirock/core-js@bba6d8d.  Load all of core-js for now to work
+// around the issue.
+require('core-js');
 
 // wrap specify/it and ensure that they always return a promise if synchronous.
 var onlypromises = function(f) {

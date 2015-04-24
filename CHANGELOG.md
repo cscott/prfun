@@ -1,4 +1,6 @@
 # prfun x.x.x (not yet released)
+* Switch from `es6-shim` to `core-js` by default.
+* Fix our subclass code to follow the latest ES6 specification.
 
 # prfun 2.0.0 (2015-04-23)
 * Breaking change: `prfun` now creates a subclass of `Promise` by

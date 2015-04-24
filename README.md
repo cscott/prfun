@@ -9,9 +9,9 @@ The `Promise` implementation included in the [ES6] "harmony" Javascript
 specification is missing some of the useful utility functions that
 are common in popular packages like [bluebird], [when], and [q].
 
-This package supplies them.  It optionally loads [es6-shim] for the basic
-`Promise` implementation, if there is not already a `Promise` implemention
-present.
+This package supplies them.  It optionally loads a `Promise`
+implementation from [core-js], if there is not already a `Promise`
+implemention present.
 
 Portions of the API and test suite are borrowed from [bluebird], [when],
 and [q].
@@ -22,7 +22,7 @@ By default `prfun` creates a `Promise` subclass, using ES6 semantics.
 This means you use it like:
 ```
 var Promise = require('prfun'); // subclasses global.Promise
-// note that global.Promise !== Promise here
+// note that global.Promise !== Promise after this point
 ```
 or
 ```
@@ -30,9 +30,9 @@ var SomeOtherPromise = require( /*something*/ );
 var Promise = require('prfun/wrap')( SomeOtherPromise );
 ```
 Note that the `SomeOtherPromise` implementation must support `Promise`
-subclassing using ES6 semantics.  ([es6-shim]'s implementation is
-known to do so.)  We will call the subclass created by `prfun` a
-"`prfun` `Promise`".
+subclassing using ES6 semantics.  (The implementations in [es6-shim]
+and [core-js] are known to do so.)  We will call the subclass created
+by `prfun` a "`prfun` `Promise`".
 
 According to the ES6 `Promise` spec, all `Promise` methods (including
 the new ones added by `prfun`) will return an instance of the subclass
@@ -1458,6 +1458,7 @@ THE SOFTWARE.
 [when]:     https://github.com/cujojs/when
 [q]:        https://github.com/kriskowal/q
 [es6-shim]: https://github.com/paulmillr/es6-shim
+[core-js]:  https://github.com/zloirock/core-js
 
 [NPM1]: https://nodei.co/npm/prfun.png
 [NPM2]: https://nodei.co/npm/prfun/
