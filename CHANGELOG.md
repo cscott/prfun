@@ -1,3 +1,5 @@
+# prfun x.x.x (not yet released)
+
 # prfun 2.1.0 (2015-04-27)
 * Switch from `es6-shim` to `core-js` by default.
 * Fix our subclass code to follow the latest ES6 specification.
