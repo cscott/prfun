@@ -16,10 +16,10 @@ var assert = require('assert');
 // always use core-js promises for tests, since platform Promises may
 // not properly implement ES6 subclasses
 delete global.Promise;
-// Loading promises as a library is broken in core-js 0.9.0; it is fixed
-// by zloirock/core-js@bba6d8d.  Load all of core-js for now to work
-// around the issue.
-require('core-js');
+// Loading promises as a library was broken in core-js 0.9.0; it was fixed
+// by zloirock/core-js@bba6d8d included in 0.9.1.  Previously we needed to
+// load all of core-js here to work around the issue.
+// require('core-js');
 
 // wrap specify/it and ensure that they always return a promise if synchronous.
 var onlypromises = function(f) {
