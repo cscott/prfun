@@ -88,14 +88,14 @@ describe('Promise.guard', function() {
   describe('n', function() {
     it('should create a function', function() {
       assert.equal(typeof Promise.guard.n(1), 'function');
-      // return a promise from all synchronous tests, for consistency
+      // Return a promise from all synchronous tests, for consistency
       return Promise.resolve();
     });
 
     it('should return a promise', function() {
       var c = Promise.guard.n(1);
       assert.equal(typeof c().then, 'function');
-      // return a promise from all synchronous tests, for consistency
+      // Return a promise from all synchronous tests, for consistency
       return Promise.resolve();
     });
 

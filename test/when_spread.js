@@ -38,7 +38,7 @@ describe('when.spread-test', function() {
 
   specify('should return a promise', function() {
     assert(typeof (resolved([1, 2]).spread().then) === 'function');
-    // return a promise from all synchronous tests, for consistency
+    // Return a promise from all synchronous tests, for consistency
     return resolved();
   });
 

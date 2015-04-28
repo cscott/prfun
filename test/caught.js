@@ -464,6 +464,7 @@ describe('A promise handler with a predicate filter', function() {
     }).caught(function(e) { return e.f.g; }, function(e) {
       assert.fail();
     }).caught(TypeError, function(e) {
+      // Uncomment to show the TypeError stack
       // console.error(e.stack);
       caught = true;
     }).caught(function(e) {
