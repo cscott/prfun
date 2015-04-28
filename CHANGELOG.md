@@ -1,4 +1,4 @@
-# prfun x.x.x (not yet released)
+# prfun 2.1.1 (2014-04-28)
 * Improve compatibilty with environments missing a definition of
   `Object.setPrototypeOf`.
 
