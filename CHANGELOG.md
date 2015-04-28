@@ -1,4 +1,6 @@
 # prfun x.x.x (not yet released)
+* Improve compatibilty with environments missing a definition of
+  `Object.setPrototypeOf`.
 
 # prfun 2.1.0 (2015-04-27)
 * Switch from `es6-shim` to `core-js` by default.
