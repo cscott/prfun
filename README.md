@@ -11,15 +11,19 @@ are common in popular packages like [bluebird], [when], and [q].
 
 This package supplies them.  It optionally loads a `Promise`
 implementation from [core-js], if there is not already a `Promise`
-implemention present.
+implemention present.  The `prfun` package also requires an
+implementation of `Object.setPrototypeOf`; it will attempt to
+load this from [core-js] if not already present.   Implementations
+loaded from [core-js] do not pollute the global namespace.
 
 Portions of the API and test suite are borrowed from [bluebird], [when],
 and [q].
 
 ## Usage
 
-By default `prfun` creates a `Promise` subclass, using ES6 semantics.
-This means you use it like:
+Unlike many other utility packages for `Promise`, `prfun` does not
+pollute the global namespace.  By default `prfun` creates a `Promise`
+subclass, using ES6 semantics.  This means you use it like:
 ```
 var Promise = require('prfun'); // subclasses global.Promise
 // note that global.Promise !== Promise after this point
