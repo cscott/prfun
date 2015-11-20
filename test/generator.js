@@ -3,7 +3,10 @@
 'use strict';
 
 // Bail if we're not running in node >= 0.11
-var node11 = parseInt(process.versions.node.split('.')[1], 10) >= 11;
+var ver = process.versions.node.split('.').map(function(s) {
+  return parseInt(s, 10);
+});
+var node11 = ver[0] > 0 || ver[1] >= 11;
 if (!node11) { return; }
 
 var assert = require('assert');

@@ -4,7 +4,7 @@
   "description": "Helper functions for ES6 promises",
   "main": "index.js",
   "scripts": {
-    "mocha": "if which iojs ; then mocha ; else mocha --harmony-generators; fi",
+    "mocha": "if node -e 'process.exit(/v0[.]([0-9]|10)[.]/.test(process.version) ? 0 : 1)' ; then mocha ; else mocha --harmony ; fi",
     "test": "jshint . && jscs . && npm run mocha"
   },
   "repository": {
