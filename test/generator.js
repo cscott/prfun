@@ -142,10 +142,19 @@ describe('Promise.async', function() {
       this.goblins = 3;
     }
 
+    MyClass.prototype.noOp = Promise.async(eval('(function*(){})'));
     MyClass.prototype.spawnGoblins = Promise.async(eval('(function*(){' +
     '  this.goblins = yield get(this.goblins+1);' +
     '})'));
 
+
+    specify('should always return a promise', function() {
+      var a = new MyClass();
+      assert(a.noOp() instanceof Promise);
+      return a.noOp().then(function(v) {
+        assert.equal(v, undefined);
+      });
+    });
 
     specify("generator function's receiver should be the instance too", function() {
       var a = new MyClass();

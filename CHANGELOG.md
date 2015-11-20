@@ -1,4 +1,7 @@
 # prfun x.x.x (not yet released)
+* Ensure that `Promise.async` always returns a `Promise`.
+  (Previously if the function returned immediately without yielding
+  the result would not be wrapped in a promise.)
 
 # prfun 2.1.1 (2014-04-28)
 * Improve compatibilty with environments missing a definition of
