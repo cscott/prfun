@@ -1,4 +1,6 @@
 # prfun x.x.x (not yet released)
+* Optimize the `Promise` subclass constructor to avoid costly overhead
+  in ES5 environments.
 
 # prfun 2.1.2 (2015-11-20)
 * Ensure that `Promise.async` always returns a `Promise`.
