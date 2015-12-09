@@ -5,7 +5,9 @@
   `Promise#then0` is not available.  Some `Promise` implementations
   provide this method, which is much more efficient than calling
   `Promise#then` and discarding the result.
-* Used `Promise#then0` in internal implementations where appropriate.
+* Used `Promise#then0` in internal implementations where appropriate,
+  including `Promise.async` (where the use of generators can now yield
+  better performance than chaining promises in the usual way).
 
 # prfun 2.1.2 (2015-11-20)
 * Ensure that `Promise.async` always returns a `Promise`.
