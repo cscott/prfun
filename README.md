@@ -99,6 +99,7 @@ libraries could break your code in mysterious ways.
     - [`Promise#get`]
     - [`Promise#return`]
     - [`Promise#tap`]
+    - [`Promise#then0`]
     - [`Promise#throw`]
     - [`Promise.defer`]
     - [`Promise#done`]
@@ -731,6 +732,23 @@ doSomething()
     .then(...)
     .then(...)
 ```
+
+<hr>
+
+#### `Promise#then0([Function onFulfilled [, Function onRejected]])` → `undefined`
+[`Promise#then0`]: #promisethen0function-onFulfilled--undefined
+
+This is identical to `Promise#then` except that it does not return
+a value.  Some `Promise` implementations (for example, `babybird`)
+export a `then0` implementation which is substantially faster than
+calling `Promise#then`.  If such an implementation is present, its
+implementation will be used.  Otherwise `prfun` will provide a
+shim implementation that just calls `Promise#then` and discards
+the result.
+
+This allows you to use `then0` freely in your own code whenever
+you don't care about the result, and `prfun` will use the most
+efficient implementation available.
 
 <hr>
 
