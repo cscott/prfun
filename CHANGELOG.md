@@ -1,6 +1,8 @@
 # prfun x.x.x (not yet released)
 * Optimize the `Promise` subclass constructor to avoid costly overhead
-  in ES5 environments.
+  in ES5 environments.  The slow ES6 path is only used if necessary
+  for correctness (or if the native Promise implementation uses ES6
+  class syntax).
 * Added `Promise#then0` to the API, which is a shim when a native
   `Promise#then0` is not available.  Some `Promise` implementations
   provide this method, which is much more efficient than calling
