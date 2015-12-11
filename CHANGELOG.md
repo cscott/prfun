@@ -1,4 +1,4 @@
-# prfun x.x.x (not yet released)
+# prfun 2.1.3 (2015-12-11)
 * Optimize the `Promise` subclass constructor to avoid costly overhead
   in ES5 environments.  The slow ES6 path is only used if necessary
   for correctness (or if the native Promise implementation uses ES6
