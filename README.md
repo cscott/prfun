@@ -32,6 +32,8 @@ or
 ```
 var SomeOtherPromise = require( /*something*/ );
 var Promise = require('prfun/wrap')( SomeOtherPromise );
+// Note that the same `Promise` object will always be
+// returned if given the same `SomeOtherPromise` to wrap.
 ```
 Note that the `SomeOtherPromise` implementation must support `Promise`
 subclassing using ES6 semantics.  (The implementations in [es6-shim]

@@ -1,4 +1,6 @@
 # prfun x.x.x (not yet released)
+* Add a cache to ensure that only a single `prfun` `Promise` class is
+  constructed even when using the wrapper interface.
 
 # prfun 2.1.3 (2015-12-11)
 * Optimize the `Promise` subclass constructor to avoid costly overhead
