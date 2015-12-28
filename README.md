@@ -11,7 +11,7 @@ are common in popular packages like [bluebird], [when], and [q].
 
 This package supplies them.  It optionally loads a `Promise`
 implementation from [core-js], if there is not already a `Promise`
-implemention present.  The `prfun` package also requires an
+implementation present.  The `prfun` package also requires an
 implementation of `Object.setPrototypeOf`; it will attempt to
 load this from [core-js] if not already present.   Implementations
 loaded from [core-js] do not pollute the global namespace.
@@ -36,9 +36,9 @@ var Promise = require('prfun/wrap')( SomeOtherPromise );
 // returned if given the same `SomeOtherPromise` to wrap.
 ```
 Note that the `SomeOtherPromise` implementation must support `Promise`
-subclassing using ES6 semantics.  (The implementations in [es6-shim]
-and [core-js] are known to do so.)  We will call the subclass created
-by `prfun` a "`prfun` `Promise`".
+subclassing using ES6 semantics.  (The implementations in [babybird],
+[es6-shim], and [core-js] are known to do so.)  We will call the subclass
+created by `prfun` a "`prfun` `Promise`".
 
 According to the ES6 `Promise` spec, all `Promise` methods (including
 the new ones added by `prfun`) will return an instance of the subclass
@@ -741,7 +741,7 @@ doSomething()
 [`Promise#then0`]: #promisethen0function-onFulfilled--undefined
 
 This is identical to `Promise#then` except that it does not return
-a value.  Some `Promise` implementations (for example, `babybird`)
+a value.  Some `Promise` implementations (for example, [babybird])
 export a `then0` implementation which is substantially faster than
 calling `Promise#then`.  If such an implementation is present, its
 implementation will be used.  Otherwise `prfun` will provide a
@@ -1483,6 +1483,7 @@ THE SOFTWARE.
 [q]:        https://github.com/kriskowal/q
 [es6-shim]: https://github.com/paulmillr/es6-shim
 [core-js]:  https://github.com/zloirock/core-js
+[babybird]: https://github.com/cscott/babybird
 
 [NPM1]: https://nodei.co/npm/prfun.png
 [NPM2]: https://nodei.co/npm/prfun/
