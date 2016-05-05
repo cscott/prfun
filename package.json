@@ -28,12 +28,12 @@
   },
   "homepage": "https://github.com/cscott/prfun",
   "devDependencies": {
-    "core-js": "~1.2.6",
-    "jscs": "~2.7.0",
-    "jshint": "~2.8.0",
-    "mocha": "~2.3.4"
+    "core-js": "^2.3.0",
+    "jscs": "^2.11.0",
+    "jshint": "^2.9.2",
+    "mocha": "^2.4.5"
   },
   "optionalDependencies": {
-    "core-js": "~1.2.6"
+    "core-js": "^2.3.0"
   }
 }

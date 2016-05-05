@@ -1,6 +1,7 @@
 # prfun x.x.x (not yet released)
 * Add a cache to ensure that only a single `prfun` `Promise` class is
   constructed even when using the wrapper interface.
+* Update npm dev dependencies.
 
 # prfun 2.1.3 (2015-12-11)
 * Optimize the `Promise` subclass constructor to avoid costly overhead
