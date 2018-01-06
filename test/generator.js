@@ -200,4 +200,43 @@ describe('Promise.async', function() {
       });
     });
   });
+
+  describe('legacy callbacks', function() {
+    var getDataFor = Promise.async(eval(
+      '(function *(input) {' +
+        'yield Promise.resolve();' +
+        'if (!input) throw new Error("no input");' +
+        'return input;' +
+      '})'), 1 /* Arg #1 is optional callback */);
+
+    specify('should return Promise', function() {
+      var p = getDataFor(5);
+      assert(p instanceof Promise);
+      return p.then(function(v) {
+        assert.equal(v, 5);
+      });
+    });
+
+    specify('should accept callback for value', function() {
+      return new Promise(function(resolve, reject) {
+        getDataFor(6, function(err, v) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(v);
+        });
+      }).then(function(vv) { assert.equal(vv, 6); });
+    });
+
+    specify('should accept callback for exception', function() {
+      return new Promise(function(resolve, reject) {
+        getDataFor(0, function(err, v) {
+          if (err) {
+            return resolve(err); // An error is the expected result!
+          }
+          reject(new Error(v));
+        });
+      }).then(function(vv) { assert(vv.message, 'no input'); });
+    });
+  });
 });

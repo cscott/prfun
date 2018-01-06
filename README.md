@@ -1338,14 +1338,17 @@ Using ECMAScript6 generators feature to implement better syntax for promises.
 and the `yield` keyword.  Node >= `0.11.2` with the `--harmony-generators`
 command-line flag will work.
 
-#### `Promise.async(GeneratorFunction generatorFunction)` → `Function`
-[`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--function
+#### `Promise.async(GeneratorFunction generatorFunction [, int cbArg])` → `Function`
+[`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--int-cbArg--function
 
 Takes a function that can use `yield` to await the resolution of
 promises while control is transferred back to the JS event loop.  You
 can write code that looks and acts like synchronous code, even using
 synchronous `try`, `catch` and `finally`.  Returns a function which
 returns a `Promise`.
+
+If the optional `cbArg` is present, then `Promise.nodify` is invoked
+on the result with the given (optional) argument as a parameter.
 
 ```js
 // Use Promise.async to create a function that acts as a coroutine
@@ -1482,6 +1485,26 @@ even starting request B. In the example with [`Promise.join`] both
 requests fire off at the same time in parallel.
 
 See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasyncgeneratorfunction).
+
+**Legacy callbacks**
+
+For compatibility with legacy code which uses callbacks, you can
+use the optional `cbArg`, as follows:
+
+```js
+var getDataFor = Promise.async(function *(input) {
+  return dataFromDataBase(input);
+}, 1 /* arg #1 is optional callback */);
+
+/* Calling this using node 'callback' syntax */
+getDataFor(input, function(err, dataForMe) {
+    if (err) {
+        console.error( err );
+    } else {
+        console.log(dataForMe);
+    }
+});
+```
 
 <hr>
 
