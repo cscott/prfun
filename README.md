@@ -1334,9 +1334,9 @@ function fetchContent(retries) {
 
 Using ECMAScript6 generators feature to implement better syntax for promises.
 
-**Experimental**: Requires an environment that supports ES6 generators
+**Note**: Requires an environment that supports ES6 generators
 and the `yield` keyword.  Node >= `0.11.2` with the `--harmony-generators`
-command-line flag will work.
+command-line flag will work, or Node >= `4` with no special flags.
 
 #### `Promise.async(GeneratorFunction generatorFunction [, int cbArg])` → `Function`
 [`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--int-cbArg--function
@@ -1351,7 +1351,29 @@ If the optional `cbArg` is present, then `Promise.nodify` is invoked
 on the result with the given (optional) argument as a parameter.
 
 ```js
-// Use Promise.async to create a function that acts as a coroutine
+// Use Promise.async to create a function that returns a Promise
+var getRecentTodosForUser = Promise.async(function*(todosFilter, userId) {
+    var todos = yield getTodosForUser(userId);
+    return todos.filter(todosFilter);
+});
+
+function getTodosForUser(userId) {
+    // returns a promise for an array of the user's todos
+}
+
+// Get (a promise for) the todos for user 123, and filter them
+// using the `isRecentTodo` filter.
+var filteredTodos = getRecentTodosForUser(isRecentTodo, 123);
+
+filteredTodos.then(showTodos, showError);
+```
+
+In addition to `try`, `catch`, and `finally`, `return` also works as
+expected.  In this revised example, `yield` allows us to return a
+result and move error handling out to the caller.
+
+```js
+// Use Promise.async to create a function that returns a Promise
 var getRecentTodosForUser = Promise.async(function*(todosFilter, userId) {
     var todos;
     try {
@@ -1371,29 +1393,37 @@ function getTodosForUser(userId) {
 var filteredTodos = getRecentTodosForUser(isRecentTodo, 123);
 ```
 
-In addition to `try`, `catch`, and `finally`, `return` also works as
-expected.  In this revised example, `yield` allows us to return a
-result and move error handling out to the caller.
+However, note the difference between `func1` and `func2` in the following:
 
 ```js
-// Use Promise.async to create a function that acts as a coroutine
-var getRecentTodosForUser = Promise.async(function*(todosFilter, userId) {
-    var todos = yield getTodosForUser(userId);
-    return todos.filter(todosFilter);
+var thrower = Promise.method(function(msg) { throw new Error(msg); });
+
+var func1 = Promise.async(function *() {
+    try {
+        return thrower("hey");
+    } catch (e) {
+        console.log("This line is never reached.");
+    }
 });
 
-function getTodosForUser(userId) {
-    // returns a promise for an array of the user's todos
-}
-
-// Get (a promise for) the todos for user 123, and filter them
-// using the `isRecentTodo` filter.
-var filteredTodos = getRecentTodosForUser(isRecentTodo, 123);
-
-filteredTodos.then(showTodos, showError);
+var func2 = Promise.async(function *() {
+    try {
+        return (yield thrower("ho"));
+    } catch (e) {
+        console.log("Exception is caught here!", e);
+    }
+});
 ```
 
-You can also use this function to implement coroutines:
+When `func1` returns a `Promise`, we leave the scope of the try block.
+By the time the returned `Promise` rejects with an error, we can no longer
+catch it.
+
+If you want to ensure that rejected `Promise`s get a chance to be caught,
+be sure to `yield` them (which resolves the `Promise` completely) before
+returning, as in `func2`.
+
+You can also use `Promise.async` to implement coroutines:
 
 ```js
 function PingPong() { }
@@ -1424,38 +1454,6 @@ Running the example with node version at least `0.11.2`:
     Ping? 4
     ...
 
-**Caution**
-
-Note the difference between `func1` and `func2` in the following:
-
-```js
-var thrower = Promise.method(function(msg) { throw new Error(msg); });
-
-var func1 = Promise.async(function *() {
-    try {
-        return thrower("hey");
-    } catch (e) {
-        console.log("This line is never reached.");
-    }
-});
-
-var func2 = Promise.async(function *() {
-    try {
-        return (yield thrower("ho"));
-    } catch (e) {
-        console.log("Exception is caught here!", e);
-    }
-});
-```
-
-When `func1` returns a `Promise`, we leave the scope of the try block.
-By the time the returned `Promise` rejects with an error, we can no longer
-catch it.
-
-If you want to ensure that rejected `Promise`s get a chance to be caught,
-be sure to `yield` them (which resolves the `Promise` completely) before
-returning, as in `func2`.
-
 **Tip**
 
 You can use [`Promise.join`] to wait for multiple promises at once.
@@ -1484,8 +1482,6 @@ parallel. It will completely wait for request A to complete before
 even starting request B. In the example with [`Promise.join`] both
 requests fire off at the same time in parallel.
 
-See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasyncgeneratorfunction).
-
 **Legacy callbacks**
 
 For compatibility with legacy code which uses callbacks, you can
@@ -1505,6 +1501,19 @@ getDataFor(input, function(err, dataForMe) {
     }
 });
 ```
+
+**See also**
+
+The
+[`async`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+functions and
+[`await`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+operator available in Node >= `7.6` are compatible with `Promise.async` and
+`yield`.  It should be straightforward to do a search-and-replace in your
+codebase once your minimum node version permits.
+
+See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasyncgeneratorfunction).
+
 
 <hr>
 
