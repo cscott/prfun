@@ -1,11 +1,14 @@
 language: node_js
 node_js:
+  # From the nvm docs, "this installs the latest version of node".
+  - "node"
   - "stable"
-  - "7.1"
-  - "6.9.1"
-  - "5.0"
-  - "4.4"
-  - "4.2"
+  - "9"
+  - "8"
+  - "7"
+  - "6"
+  - "5"
+  - "4"
   - "4.0"
   - "0.12"
   - "0.11"
