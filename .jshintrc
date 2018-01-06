@@ -1,4 +1,0 @@
-{
-        "predef": [ "describe", "specify", "it" ],
-        "node": true
-}

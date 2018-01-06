@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 /*
   Based on When.js tests
@@ -129,7 +129,7 @@ describe('when.reduce-test', function() {
 
   specify('should reject with empty array', function() {
     var caught = false;
-    return when.reduce([], plus).caught(TypeError, function(e) {
+    return when.reduce([], plus).caught(TypeError, function(e) { // eslint-disable-line no-unused-vars
       caught = true;
     }).then(function() {
       assert.deepEqual(caught, true);
@@ -271,7 +271,7 @@ describe('when.reduceRight-test', function() {
 
   specify('should reject with empty array', function() {
     var caught = false;
-    return when.reduceRight([], plus).caught(TypeError, function(e) {
+    return when.reduceRight([], plus).caught(TypeError, function(e) { // eslint-disable-line no-unused-vars
       caught = true;
     }).then(function() {
       assert.deepEqual(caught, true);

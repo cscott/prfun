@@ -3,9 +3,6 @@
 var assert = require('assert');
 var Promise = require('../');
 
-var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
-
 function promised(val) {
   return Promise.delay(val, 4);
 }

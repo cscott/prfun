@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 
 var assert = require('assert');
@@ -6,14 +6,14 @@ var Promise = require('../');
 
 var RejectionError = function() {};
 
+var sentinel = {};
+var sentinelError = new RejectionError();
+
 var erroneousNode = function(a, b, c, cb) {
   setTimeout(function() {
     cb(sentinelError);
   }, 10);
 };
-
-var sentinel = {};
-var sentinelError = new RejectionError();
 
 var successNode = function(a, b, c, cb) {
   setTimeout(function() {
@@ -40,13 +40,13 @@ var syncSuccessNodeMultipleValues = function(a, b, c, cb) {
 };
 
 var errToThrow;
-var thrower = Promise.promisify(function(a, b, c, cb) {
+var thrower = Promise.promisify(function(a, b, c, cb) { // eslint-disable-line no-unused-vars
   errToThrow = new RejectionError();
   throw errToThrow;
 });
 
 var tprimitive = 'Where is your stack now?';
-var throwsStrings = Promise.promisify(function(cb) {
+var throwsStrings = Promise.promisify(function(cb) { // eslint-disable-line no-unused-vars
   throw tprimitive;
 });
 
@@ -232,7 +232,7 @@ describe.skip('Primitive errors wrapping', function() {
   specify('when the node function throws it', function() {
     return throwsStrings().then(assert.fail, function(e) {
       assert(e instanceof Error);
-      assert(e.message == tprimitive);
+      assert(e.message === tprimitive);
     });
   });
 
@@ -249,7 +249,7 @@ describe.skip('Primitive errors wrapping', function() {
   specify('when the node function errbacks it synchronously', function() {
     return errbacksStrings().then(assert.fail, function(e) {
       assert(e instanceof Error);
-      assert(e.message == tprimitive);
+      assert(e.message === tprimitive);
     });
   });
 
@@ -257,7 +257,7 @@ describe.skip('Primitive errors wrapping', function() {
     return Promise.resolve().then(function() {
       errbacksStrings().then(assert.fail, function(e) {
         assert(e instanceof Error);
-        assert(e.message == tprimitive);
+        assert(e.message === tprimitive);
       });
     });
   });
@@ -265,7 +265,7 @@ describe.skip('Primitive errors wrapping', function() {
   specify('when the node function errbacks it asynchronously', function() {
     return errbacksStringsAsync().then(assert.fail, function(e) {
       assert(e instanceof Error);
-      assert(e.message == tprimitive);
+      assert(e.message === tprimitive);
     });
   });
 
@@ -273,7 +273,7 @@ describe.skip('Primitive errors wrapping', function() {
     return Promise.resolve().then(function() {
       errbacksStringsAsync().then(assert.fail, function(e) {
         assert(e instanceof Error);
-        assert(e.message == tprimitive);
+        assert(e.message === tprimitive);
       });
     });
   });
@@ -314,16 +314,16 @@ describe.skip('RejectionError wrapping', function() {
     cb(new CustomError());
   };
 
-  var stringthrow = function(cb) {
-    throw('Primitive as error');
+  var stringthrow = function(cb) { // eslint-disable-line no-unused-vars
+    throw ('Primitive as error');
   };
 
-  var errthrow = function(cb) {
-    throw(new Error('error as error'));
+  var errthrow = function(cb) { // eslint-disable-line no-unused-vars
+    throw (new Error('error as error'));
   };
 
-  var typethrow = function(cb) {
-    throw(new CustomError());
+  var typethrow = function(cb) { // eslint-disable-line no-unused-vars
+    throw (new CustomError());
   };
 
   stringback = Promise.promisify(stringback);
@@ -348,7 +348,7 @@ describe.skip('RejectionError wrapping', function() {
   });
 
   specify('should not wrap typeback', function(done) {
-    typeback().caught(CustomError, function(e) {
+    typeback().caught(CustomError, function(e) { // eslint-disable-line no-unused-vars
       done();
     });
   });
@@ -369,7 +369,7 @@ describe.skip('RejectionError wrapping', function() {
 
   specify('should not wrap typethrow', function(done) {
     typethrow().error(assert.fail)
-      .caught(CustomError, function(e) {
+      .caught(CustomError, function(e) { // eslint-disable-line no-unused-vars
         done();
       });
   });

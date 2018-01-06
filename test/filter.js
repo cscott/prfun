@@ -1,11 +1,8 @@
+/* eslint no-unused-vars: ["error", { "args": "none" }] */
 'use strict';
 
 var assert = require('assert');
 var Promise = require('../');
-
-var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
-var pending = Promise.defer.bind(Promise);
 
 describe('Promise filter', function() {
 

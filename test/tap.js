@@ -1,12 +1,8 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 
 var assert = require('assert');
 var Promise = require('../');
-
-var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
-var pending = Promise.defer.bind(Promise);
 
 describe('tap', function() {
   specify('passes through value', function(done) {
@@ -38,7 +34,7 @@ describe('tap', function() {
     var called = false;
     Promise.reject('test').tap(function() {
       called = true;
-    }).caught(function(value) {
+    }).caught(function(value) { // eslint-disable-line no-unused-vars
       assert(!called);
       done();
     });

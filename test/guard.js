@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 
 var assert = require('assert');

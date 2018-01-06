@@ -4,7 +4,6 @@ var assert = require('assert');
 var Promise = require('../');
 
 var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
 var pending = Promise.defer.bind(Promise);
 
 var obj = {};
@@ -109,7 +108,7 @@ describe('Promise.try', function() {
 
     return tryy(function() {
       return {
-        then: function(f, v) {
+        then: function(f, v) { // eslint-disable-line no-unused-vars
           f(3);
         },
       };

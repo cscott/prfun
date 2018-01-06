@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 /*
   Based on When.js tests
@@ -90,7 +90,7 @@ describe('when.all-test', function() {
 
   specify('should resolve sparse array input', function() {
     /* jshint elision: true */
-    var input = [, 1, , 1, 1 ];
+    var input = [, 1, , 1, 1];
     return when.all(input).then(
       function(results) {
         assert.deepEqual(JSON.stringify(results), JSON.stringify(input));
@@ -100,7 +100,7 @@ describe('when.all-test', function() {
 
   specify('should resolve promise of sparse array input', function() {
     /* jshint elision: true */
-    var input = [, 1, , 1, 1 ];
+    var input = [, 1, , 1, 1];
     return resolved(input).all().then(
       function(results) {
         assert.deepEqual(JSON.stringify(results), JSON.stringify(input));
@@ -153,7 +153,7 @@ describe('when.all-test', function() {
 
   specify('should reject when input promise does not resolve to array', function() {
     var caught = false;
-    return when.all(resolved(1)).caught(TypeError, function(e) {
+    return when.all(resolved(1)).caught(TypeError, function(e) { // eslint-disable-line no-unused-vars
       caught = true;
     }).then(function() {
       assert.deepEqual(caught, true);

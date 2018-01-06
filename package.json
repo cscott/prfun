@@ -4,12 +4,12 @@
   "description": "Helper functions for ES6 promises",
   "main": "index.js",
   "scripts": {
-    "jscs": "jscs .",
-    "jscs-fix": "jscs --fix .",
-    "lint": "jshint . && npm run jscs",
-    "lint-no-0.8": "node -e 'process.exit(/v0[.][0-8][.]/.test(process.version) ? 0 : 1)' || npm run lint",
+    "eslint": "eslint .",
+    "eslint-fix": "eslint --fix .",
+    "lint": "npm run eslint",
+    "lint-no-0.x": "node -e 'process.exit(/v0[.][0-9]+[.]/.test(process.version) ? 0 : 1)' || npm run lint",
     "mocha": "if node -e 'process.exit(/v0[.]([0-9]|10)[.]/.test(process.version) ? 0 : 1)' ; then mocha ; else mocha --harmony ; fi",
-    "test": "npm run lint-no-0.8 && npm run mocha"
+    "test": "npm run lint-no-0.x && npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -28,12 +28,12 @@
   },
   "homepage": "https://github.com/cscott/prfun",
   "devDependencies": {
-    "core-js": "^2.3.0",
-    "jscs": "^2.11.0",
-    "jshint": "^2.9.2",
+    "core-js": "^2.5.3",
+    "eslint": "^4.14.0",
+    "eslint-config-node-style-guide": "^3.0.0",
     "mocha": "^3.5.0"
   },
   "optionalDependencies": {
-    "core-js": "^2.3.0"
+    "core-js": "^2.5.3"
   }
 }

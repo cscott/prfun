@@ -4,7 +4,6 @@ var assert = require('assert');
 var Promise = require('../');
 
 var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
 var pending = Promise.defer.bind(Promise);
 
 var obj = {};
@@ -42,8 +41,7 @@ describe('Promise.method', function() {
     try {
       Promise.method(null);
       assert.fail();
-    }
-    catch (e) {
+    } catch (e) {
       assert(e instanceof TypeError);
     }
     // Return a promise from all synchronous tests, for consistency
@@ -98,7 +96,7 @@ describe('Promise.method', function() {
   specify('should unwrap returned thenable', function() {
     return Promise.method(function() {
       return {
-        then: function(f, v) {
+        then: function(f, v) { // eslint-disable-line no-unused-vars
           f(3);
         },
       };

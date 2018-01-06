@@ -31,7 +31,7 @@ var Promise = require('../');
 
 var when = Promise;
 var resolved = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
+var rejected = Promise.reject.bind(Promise); // eslint-disable-line
 
 describe('when.spread-test', function() {
   var slice = [].slice;

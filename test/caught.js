@@ -1,11 +1,10 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
+/* eslint no-unused-vars: ["error", { "args": "none" }] */
 'use strict';
 
 var assert = require('assert');
 var Promise = require('../');
 
-var fulfilled = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
 var pending = Promise.defer.bind(Promise);
 
 var CustomError = function() {};
@@ -14,11 +13,6 @@ CustomError.prototype = new Error();
 var predicateFilter = function(e) {
   return (/invalid/).test(e.message);
 };
-
-function BadError(msg) {
-  this.message = msg;
-  return this;
-}
 
 function predicatesUndefined(e) {
   return e === void 0;
@@ -340,7 +334,6 @@ describe('A promise handler that is caught in a filter', function() {
   specify('is continued normally after returning a promise in original handler', function() {
     var a = pending();
     var c = pending();
-    var b = new CustomError();
 
     setTimeout(function() { a.resolve(3); }, 10);
     setTimeout(function() { c.resolve(3); }, 20);

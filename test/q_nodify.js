@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 
 var assert = require('assert');
@@ -95,11 +95,6 @@ if (isNodeJS) {
       }
     }
 
-    function addHandlersBack() {
-      for (var i = 0, len = h.length; i < len; ++i) {
-        process.addListener('uncaughtException', h[i]);
-      }
-    }
     var e = new Error();
     function thrower() {
       throw e;

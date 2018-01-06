@@ -123,9 +123,9 @@ describe('Promise.props', function() {
   });
 
   specify('should accept thenables in properties', function() {
-    var t1 = {then: function(cb) {cb(1);}};
-    var t2 = {then: function(cb) {cb(2);}};
-    var t3 = {then: function(cb) {cb(3);}};
+    var t1 = { then: function(cb) {cb(1);} };
+    var t2 = { then: function(cb) {cb(2);} };
+    var t3 = { then: function(cb) {cb(3);} };
     var o = {
       one: t1,
       two: t2,

@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 /*
   Based on When.js tests
@@ -31,21 +31,8 @@ var assert = require('assert');
 var Promise = require('../');
 
 var when = Promise;
-var resolved = Promise.resolve.bind(Promise);
-var rejected = Promise.reject.bind(Promise);
 
 var sentinel = {};
-var other = {};
-
-var refute = {
-  defined: function(val) {
-    assert(typeof val === 'undefined');
-  },
-
-  equals: function(a, b) {
-    assert.notDeepEqual(a, b);
-  },
-};
 
 function fakeResolved(val) {
   return {

@@ -1,5 +1,4 @@
-// jscs:disable maximumLineLength
-/* jshint evil:true */
+/* eslint-disable max-len, no-unused-vars */
 'use strict';
 
 // Bail if we're not running in node >= 0.11

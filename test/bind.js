@@ -1,4 +1,4 @@
-// jscs:disable maximumLineLength
+/* eslint-disable max-len */
 'use strict';
 
 var assert = require('assert');
@@ -8,7 +8,7 @@ var fulfilled = Promise.resolve.bind(Promise);
 var rejected = Promise.reject.bind(Promise);
 var pending = Promise.defer.bind(Promise);
 
-var THIS = {name: 'this'};
+var THIS = { name: 'this' };
 
 function CustomError1() {}
 CustomError1.prototype = Object.create(Error.prototype);
@@ -82,7 +82,7 @@ describe('when using .bind', function() {
       specify('in rejected handler after timeout', function() {
         return new Promise(function() {})
           .bind(THIS).timeout(10).then(assert.fail)
-          .caught(Promise.TimeoutError, function(err) {
+          .caught(Promise.TimeoutError, function(err) { // eslint-disable-line no-unused-vars
             assert(this === THIS);
           });
       });
@@ -98,7 +98,7 @@ describe('when using .bind', function() {
           assert(THIS === this);
           var a;
           a.b();
-        }).caught(Error, function(e) {
+        }).caught(Error, function(e) { // eslint-disable-line no-unused-vars
           assert(THIS === this);
         });
       });
@@ -106,7 +106,7 @@ describe('when using .bind', function() {
         return fulfilled().bind(THIS).then(function() {
           throw new CustomError1();
         }).caught(CustomError2, assert.fail)
-          .caught(CustomError1, function(e) {
+          .caught(CustomError1, function(e) { // eslint-disable-line no-unused-vars
             assert(THIS === this);
           });
       });
@@ -189,7 +189,7 @@ describe('when using .bind', function() {
 
   describe('With #get promises', function() {
     specify('this should refer to the bound object', function() {
-      return fulfilled({key: 'value'}).bind(THIS).get('key').then(function(val) {
+      return fulfilled({ key: 'value' }).bind(THIS).get('key').then(function(val) {
         assert(val === 'value');
         assert(this === THIS);
       });
@@ -199,7 +199,7 @@ describe('when using .bind', function() {
 
   describe('With #call promises', function() {
     specify('this should refer to the bound object', function() {
-      return fulfilled({key: function() {return 'value';}}).bind(THIS).call('key').then(function(val) {
+      return fulfilled({ key: function() {return 'value';} }).bind(THIS).call('key').then(function(val) {
         assert(val === 'value');
         assert(this === THIS);
       });
@@ -313,7 +313,7 @@ describe('when using .bind', function() {
         });
       });
       specify('when the callback errs', function(done) {
-        rejected(3).bind(THIS).nodify(function(err, success) {
+        rejected(3).bind(THIS).nodify(function(err, success) { // eslint-disable-line no-unused-vars
           try {
             assert(err === 3);
             assert(this === THIS);

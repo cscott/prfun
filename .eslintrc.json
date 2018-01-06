@@ -1,0 +1,28 @@
+{
+  "extends": "node-style-guide",
+  "env": {
+    "node": true
+  },
+  "globals": {},
+  "rules": {
+    "space-after-keywords": "off",
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "object-curly-spacing": ["error", "always"],
+    "keyword-spacing": [2, {"before": true, "after": true}],
+    "max-statements": "off",
+    "capitalized-comments": [
+        "error",
+        "always",
+        {
+            "ignoreConsecutiveComments": true
+        }
+    ],
+    "quotes": [
+      2,
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ]
+  }
+}
