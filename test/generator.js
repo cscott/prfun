@@ -169,4 +169,35 @@ describe('Promise.async', function() {
 
     });
   });
+
+  describe('caution from README', function() {
+    var thrower = Promise.method(function(msg) { throw new Error(msg); });
+
+    specify('return promise-which-rejects does not catch', function() {
+      var func1 = Promise.async(eval('(function *() {' +
+        'try {' +
+        '  return thrower("hey");' +
+        '} catch (e) {' +
+        '  assert(false); /* this line is never reached */' +
+        '}' +
+      '})'));
+      return func1().then(assert.fail, function(e) {
+        assert.equal(e.message, 'hey');
+      });
+    });
+
+    specify('return yield-promise-which-rejects does catch', function() {
+      var func1 = Promise.async(eval('(function *() {' +
+        'try {' +
+        '  return (yield thrower("ho"));' +
+        '} catch (e) {' +
+        '  assert.equal(e.message, "ho");' +
+        '  return "caught";' +
+        '}' +
+      '})'));
+      return func1().then(function(v) {
+        assert.equal(v, 'caught');
+      });
+    });
+  });
 });

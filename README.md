@@ -1187,8 +1187,9 @@ Normal callbacks:
 getDataFor("me", function(err, dataForMe) {
     if( err ) {
         console.error( err );
+    } else {
+        console.log(dataForMe);
     }
-    console.log(dataForMe);
 });
 ```
 
@@ -1420,6 +1421,38 @@ Running the example with node version at least `0.11.2`:
     Ping? 4
     ...
 
+**Caution**
+
+Note the difference between `func1` and `func2` in the following:
+
+```js
+var thrower = Promise.method(function(msg) { throw new Error(msg); });
+
+var func1 = Promise.async(function *() {
+    try {
+        return thrower("hey");
+    } catch (e) {
+        console.log("This line is never reached.");
+    }
+});
+
+var func2 = Promise.async(function *() {
+    try {
+        return (yield thrower("ho"));
+    } catch (e) {
+        console.log("Exception is caught here!", e);
+    }
+});
+```
+
+When `func1` returns a `Promise`, we leave the scope of the try block.
+By the time the returned `Promise` rejects with an error, we can no longer
+catch it.
+
+If you want to ensure that rejected `Promise`s get a chance to be caught,
+be sure to `yield` them (which resolves the `Promise` completely) before
+returning, as in `func2`.
+
 **Tip**
 
 You can use [`Promise.join`] to wait for multiple promises at once.
@@ -1455,7 +1488,7 @@ See also [`Q.async`](https://github.com/kriskowal/q/wiki/API-Reference#wiki-qasy
 
 ## License
 
-Copyright (c) 2014-2015 C. Scott Ananian
+Copyright (c) 2014-2018 C. Scott Ananian
 
 Portions are Copyright (c) 2014 Petka Antonov
 
