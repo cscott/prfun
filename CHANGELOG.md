@@ -1,3 +1,5 @@
+# prfun x.x.x (not yet released)
+
 # prfun 2.1.5 (2018-01-06)
 * Allow functions created by `Promise.async` to accept legacy node-style
   callback arguments.
