@@ -1339,7 +1339,7 @@ and the `yield` keyword.  Node >= `0.11.2` with the `--harmony-generators`
 command-line flag will work, or Node >= `4` with no special flags.
 
 #### `Promise.async(GeneratorFunction generatorFunction [, int cbArg])` → `Function`
-[`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--int-cbArg--function
+[`Promise.async`]: #promiseasyncgeneratorfunction-generatorfunction--int-cbarg--function
 
 Takes a function that can use `yield` to await the resolution of
 promises while control is transferred back to the JS event loop.  You
