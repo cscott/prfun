@@ -508,7 +508,7 @@ conceptually items of the same list.
 
 Shorthands for common operations.
 
-#####`Promise.bind(dynamic thisArg)` -> `Promise`
+##### `Promise.bind(dynamic thisArg)` -> `Promise`
 [`Promise.bind`]: #promisebinddynamic-thisarg---promise
 
 Sugar for `Promise.resolve(undefined).bind(thisArg);`.
@@ -516,7 +516,7 @@ See [`Promise#bind`].
 
 <hr>
 
-#####`Promise#bind(dynamic thisArg)` -> `Promise`
+##### `Promise#bind(dynamic thisArg)` -> `Promise`
 [`Promise#bind`]: #promisebinddynamic-thisarg---promise-1
 
 Create a promise that follows this promise, but is bound to the given
@@ -799,9 +799,7 @@ are rethrown so as to trigger the top-level unhandled exception
 handler (which will typically result in a message on console).
 
 The use of `Promise#done` is discouraged---it is hoped that future
-promise implementations [will provide special development tools to
-track orphaned promises]
-(https://github.com/domenic/promises-unwrapping/issues/19).
+promise implementations [will provide special development tools to track orphaned promises](https://github.com/domenic/promises-unwrapping/issues/19).
 This method is provided for compatibility with older libraries,
 and as a make-do until better debugging tools are integrated
 into JavaScript engines.
