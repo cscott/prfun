@@ -24,12 +24,12 @@ and [q].
 Unlike many other utility packages for `Promise`, `prfun` does not
 pollute the global namespace.  By default `prfun` creates a `Promise`
 subclass, using ES6 semantics.  This means you use it like:
-```
+```js
 var Promise = require('prfun'); // subclasses global.Promise
 // note that global.Promise !== Promise after this point
 ```
 or
-```
+```js
 var SomeOtherPromise = require( /*something*/ );
 var Promise = require('prfun/wrap')( SomeOtherPromise );
 // Note that the same `Promise` object will always be
@@ -53,7 +53,7 @@ If your code is given a promise from an outside API, and you can't
 guarantee that it is a `prfun` Promise, then you can use
 `Promise.resolve` in order to cast the outside promise to a `prfun`
 `Promise`.   For example:
-```
+```js
 var Promise = require('prfun'); // this is a "prfun Promise"
 
 function myApi(externalPromise) {
@@ -65,7 +65,7 @@ function myApi(externalPromise) {
 
 In order to *modify the global `Promise` object* (instead of
 subclassing), use:
-```
+```js
 require('prfun/smash');
 // global.Promise.reduce, global.Promise.tap, etc, now exist.
 ```
